@@ -1,5 +1,7 @@
 package gq.fokia.eatwhat;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,11 +22,13 @@ import java.util.Random;
 public class AllFoodFragment extends Fragment {
 
     private List<Food> foodList = new ArrayList<>();
+    private FoodDBOpenHelper foodDBOpenHelper;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.allfood_fragment, container, false);
-        initFoods();
+//        initFoods();
+        getFoodsData();
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycle_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
 //        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(3,
@@ -49,13 +53,18 @@ public class AllFoodFragment extends Fragment {
             foodList.add(dumpling);
         }
     }
-//    private String getRandomLengthName(String name){
-//        Random random = new Random();
-//        int length = random.nextInt(20)+1;
-//        StringBuilder builder = new StringBuilder();
-//        for(int i=0;i<length;i++){
-//            builder.append(name);
-//        }
-//        return builder.toString();
-//    }
+
+    private void getFoodsData(){
+        foodDBOpenHelper = new FoodDBOpenHelper(getContext(),
+                "FoodClub.db", null, 1);
+        SQLiteDatabase db = foodDBOpenHelper.getWritableDatabase();
+        Cursor cursor = db.query("food", null, null, null, null, null, null, null);
+        if (cursor.moveToFirst()){
+            while (!cursor.isAfterLast()){
+                foodList.add(new Food(cursor.getString(1),
+                        cursor.getDouble(2), R.mipmap.ic_launcher));
+                cursor.moveToNext();
+            }
+        }
+    }
 }

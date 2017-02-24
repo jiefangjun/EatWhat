@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
@@ -37,9 +38,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mDrawerLayout.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
-        foodDBOpenHelper = new FoodDBOpenHelper(this,
-                "FoodClub.db", null, 1);
-        foodDBOpenHelper.getWritableDatabase();
+//        foodDBOpenHelper = new FoodDBOpenHelper(this,
+//                "FoodClub.db", null, 1);
+//        foodDBOpenHelper.getWritableDatabase();
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,8 +102,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (item.getItemId()){
             case R.id.nav_all:
                 replaceFragment(new AllFoodFragment());
-
                 break;
+            case R.id.nav_add:
+                replaceFragment(new AddFoodFragment());
+                fab.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getApplicationContext(),"change click",Toast.LENGTH_LONG).show();
+                    }
+                });
             default:
                 break;
         }
