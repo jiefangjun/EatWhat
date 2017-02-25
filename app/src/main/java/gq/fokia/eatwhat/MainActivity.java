@@ -1,5 +1,8 @@
 package gq.fokia.eatwhat;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,12 +21,15 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import static gq.fokia.eatwhat.AddFoodFragment.TAKE_PHOTO;
+
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     private DrawerLayout mDrawerLayout;
     private Toolbar toolbar;
     private FloatingActionButton fab;
     private FoodDBOpenHelper foodDBOpenHelper;
+    private FragmentManager fragmentManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mDrawerLayout = (DrawerLayout) findViewById(R.id.root_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         transparentState();
+
         initToolbar();
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, mDrawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -74,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void replaceFragment(Fragment fragment){
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.right_layout, fragment);
         transaction.addToBackStack(null);
