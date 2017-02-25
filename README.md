@@ -1,1 +1,2 @@
-# EatWhat随机生成菜单
+# EatWhat
+随机生成菜单
