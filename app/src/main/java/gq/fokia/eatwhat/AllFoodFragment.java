@@ -65,6 +65,7 @@ public class AllFoodFragment extends Fragment {
                         cursor.getDouble(2), R.mipmap.ic_launcher));
                 cursor.moveToNext();
             }
+            cursor.close();
         }
     }
 }

@@ -10,6 +10,7 @@ import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
@@ -22,9 +23,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import static android.app.Activity.RESULT_OK;
@@ -80,6 +84,7 @@ public class AddFoodFragment extends Fragment {
         values.put("introduce", editIntroduce.getText().toString());
         //values.put("image", img().toString());
         db.insert("food", null, values);
+        savePicture(bitmapImage);
     }
 
     private void takePhoto(){
@@ -127,9 +132,24 @@ public class AddFoodFragment extends Fragment {
         }
     }
 
-    public byte[] img() {
-             ByteArrayOutputStream image = new ByteArrayOutputStream();
-             bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, image);
-             return image.toByteArray();
+    public void savePicture(Bitmap bitmap) {
+        String picturePath = Environment.getExternalStorageDirectory().toString() + "/EatWhat/";
+        Log.d(getClass().toString(), picturePath);
+        File dir = new File(picturePath);
+        if (!dir.exists()){
+            dir.mkdirs();
         }
+        File file = new File(picturePath, editName.getText().toString()+".jpg");
+        FileOutputStream out;
+        try {
+                out = new FileOutputStream(file);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 30, out);
+                out.flush();
+                out.close();
+        } catch (FileNotFoundException e) {
+                e.printStackTrace();
+        } catch (IOException e) {
+                e.printStackTrace();
+        }
+    }
 }
