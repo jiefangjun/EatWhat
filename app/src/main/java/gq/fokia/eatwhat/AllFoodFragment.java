@@ -28,7 +28,7 @@ import java.util.Random;
 
 public class AllFoodFragment extends Fragment {
 
-    //private List<Food> foodList = new ArrayList<>();
+    private List<Food> foodList = new ArrayList<>();
     private FoodDBOpenHelper foodDBOpenHelper;
     private Bitmap bitmap;
     private View view;
@@ -56,7 +56,7 @@ public class AllFoodFragment extends Fragment {
     }
 
     private void getFoodsData(){
-        List<Food> foodList = new ArrayList<>();
+
         foodDBOpenHelper = new FoodDBOpenHelper(getContext(),
                 "FoodClub.db", null, 1);
         SQLiteDatabase db = foodDBOpenHelper.getWritableDatabase();
@@ -99,8 +99,10 @@ public class AllFoodFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
-        getFoodsData();
-        recyclerView.setAdapter(adapter);
+        if(foodList.isEmpty()) {
+            getFoodsData();
+            recyclerView.setAdapter(adapter);
+        }
     }
 
 

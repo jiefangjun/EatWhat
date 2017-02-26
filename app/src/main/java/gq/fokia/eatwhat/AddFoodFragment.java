@@ -111,8 +111,15 @@ public class AddFoodFragment extends Fragment {
 
     public void setImage() {
         try {
-            bitmapImage = BitmapFactory.decodeStream(getContext().getContentResolver()
-                    .openInputStream(imageUri));
+            BitmapFactory bitmapFactory = new BitmapFactory();
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+//            int imageHeight = options.outHeight;
+//            int imageWidth = options.outWidth;
+            options.inJustDecodeBounds = false;
+            options.inSampleSize = 2;
+            bitmapImage = bitmapFactory.decodeStream(getContext().getContentResolver()
+                    .openInputStream(imageUri), null, options);
             editImage.setImageBitmap(bitmapImage);
             Log.d(getClass().toString(), "setImage success");
         } catch (FileNotFoundException e) {
