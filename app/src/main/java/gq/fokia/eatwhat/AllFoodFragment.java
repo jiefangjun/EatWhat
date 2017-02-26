@@ -2,18 +2,25 @@ package gq.fokia.eatwhat;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
 
 /**
  * Created by fokia on 17-2-21.
@@ -21,40 +28,35 @@ import java.util.Random;
 
 public class AllFoodFragment extends Fragment {
 
-    private List<Food> foodList = new ArrayList<>();
+    //private List<Food> foodList = new ArrayList<>();
     private FoodDBOpenHelper foodDBOpenHelper;
+    private Bitmap bitmap;
+    private View view;
+    private FoodAdapter adapter;
+    private RecyclerView recyclerView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        View view = inflater.inflate(R.layout.allfood_fragment, container, false);
+        view = inflater.inflate(R.layout.allfood_fragment, container, false);
 //        initFoods();
-        getFoodsData();
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycle_view);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recycle_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-//        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(3,
-//                StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
-        FoodAdapter adapter = new FoodAdapter(foodList);
-        recyclerView.setAdapter(adapter);
+
+        Log.d(getClass().toString(), "onCreateView Executed");
         return view;
+
     }
 
-    private void initFoods(){
-        for (int i = 0; i < 4; i++){
-            Food chicken = new Food("大盘鸡", 88, R.mipmap.ic_launcher);
-            foodList.add(chicken);
-            Food noodles = new Food("面条", 88, R.mipmap.ic_launcher);
-            foodList.add(noodles);
-            Food rice = new Food("米饭", 88, R.mipmap.ic_launcher);
-            foodList.add(rice);
-            Food milk = new Food("牛奶", 88, R.mipmap.ic_launcher);
-            foodList.add(milk);
-            Food dumpling = new Food("饺子", 88, R.mipmap.ic_launcher);
-            foodList.add(dumpling);
-        }
+    @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        Log.d(getClass().toString(), "onStart Executed");
+        //getFoodsData();
     }
 
     private void getFoodsData(){
+        List<Food> foodList = new ArrayList<>();
         foodDBOpenHelper = new FoodDBOpenHelper(getContext(),
                 "FoodClub.db", null, 1);
         SQLiteDatabase db = foodDBOpenHelper.getWritableDatabase();
@@ -62,10 +64,44 @@ public class AllFoodFragment extends Fragment {
         if (cursor.moveToFirst()){
             while (!cursor.isAfterLast()){
                 foodList.add(new Food(cursor.getString(1),
-                        cursor.getDouble(2), R.mipmap.ic_launcher));
+                        cursor.getDouble(2), getImage(cursor.getString(3))));
                 cursor.moveToNext();
             }
             cursor.close();
         }
+        adapter = new FoodAdapter(foodList);
+//        recyclerView.setAdapter(adapter);
     }
+
+    private Bitmap getImage(String imagePath){
+        try {
+            BitmapFactory bitmapFactory = new BitmapFactory();
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+//            int imageHeight = options.outHeight;
+//            int imageWidth = options.outWidth;
+            options.inJustDecodeBounds = false;
+            options.inSampleSize = 2;
+            bitmap = bitmapFactory.decodeFile(imagePath, options);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return bitmap;
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        //foodList.clear();
+        Log.d(getClass().toString(), "onPause Executed");
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        getFoodsData();
+        recyclerView.setAdapter(adapter);
+    }
+
+
 }

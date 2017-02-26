@@ -47,6 +47,7 @@ public class AddFoodFragment extends Fragment {
     private FoodDBOpenHelper foodDBOpenHelper;
     private Uri imageUri;
     private Bitmap bitmapImage;
+    private String absoluteImagePath;
 
     public static final int TAKE_PHOTO = 1;
 
@@ -77,14 +78,14 @@ public class AddFoodFragment extends Fragment {
     }
 
     private void addFoodsData(){
+        savePicture(bitmapImage);
         SQLiteDatabase db = foodDBOpenHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("name", editName.getText().toString());
         values.put("price", editPrice.getText().toString());
         values.put("introduce", editIntroduce.getText().toString());
-        //values.put("image", img().toString());
+        values.put("image", absoluteImagePath);
         db.insert("food", null, values);
-        savePicture(bitmapImage);
     }
 
     private void takePhoto(){
@@ -140,6 +141,8 @@ public class AddFoodFragment extends Fragment {
             dir.mkdirs();
         }
         File file = new File(picturePath, editName.getText().toString()+".jpg");
+        absoluteImagePath = picturePath + editName.getText().toString()+ ".jpg";
+        Log.d("absoluteImagePath", absoluteImagePath);
         FileOutputStream out;
         try {
                 out = new FileOutputStream(file);

@@ -24,14 +24,14 @@ public class RandomFoodFragment extends Fragment {
         name = (TextView) view.findViewById(R.id.random_name);
         price = (TextView) view.findViewById(R.id.random_price);
         introduce = (TextView) view.findViewById(R.id.introduce);
-        getRandomFood();
+        //getRandomFood();
         return view;
     }
-    private void getRandomFood(){
+    /*private void getRandomFood(){
         Food food = new Food("random", 666, R.mipmap.ic_launcher);
         foodImage.setImageResource(food.getImageId());
         name.setText(food.getName());
         price.setText(food.getPrice()+"");
         introduce.setText("To Do");
-    }
+    }*/
 }

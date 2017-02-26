@@ -14,7 +14,7 @@ public class FoodDBOpenHelper extends SQLiteOpenHelper {
             "id integer primary key autoincrement, " +
             "name text, " +
             "price real, " +
-            "image blob, " +
+            "image text, " +
             "introduce text)";
     private Context mContext;
     public FoodDBOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory

@@ -11,15 +11,19 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.ListFragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
+
+import java.util.List;
 
 import static gq.fokia.eatwhat.AddFoodFragment.TAKE_PHOTO;
 
@@ -28,15 +32,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout mDrawerLayout;
     private Toolbar toolbar;
     private FloatingActionButton fab;
-    private FoodDBOpenHelper foodDBOpenHelper;
     private FragmentManager fragmentManager;
+    private NavigationView navigationView;
+    private AllFoodFragment allFoodFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         replaceFragment(new RandomFoodFragment());
         mDrawerLayout = (DrawerLayout) findViewById(R.id.root_layout);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         transparentState();
 
         initToolbar();
@@ -45,9 +50,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mDrawerLayout.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
-//        foodDBOpenHelper = new FoodDBOpenHelper(this,
-//                "FoodClub.db", null, 1);
-//        foodDBOpenHelper.getWritableDatabase();
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             }
         });
-
+        allFoodFragment = new AllFoodFragment();
     }
     private void transparentState(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -84,31 +86,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.right_layout, fragment);
-        transaction.addToBackStack(null);
+        //transaction.addToBackStack(null);
         transaction.commit();
     }
 
-
-//        @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.create_db) {
-//
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.nav_all:
-                replaceFragment(new AllFoodFragment());
+                List listFragment = fragmentManager.getFragments();
+                if(!allFoodFragment.equals(listFragment.get(listFragment.size() - 1))) {
+                    allFoodFragment = new AllFoodFragment();
+                    replaceFragment(allFoodFragment);
+                    navigationView.setCheckedItem(R.id.nav_all);
+                }
                 break;
             case R.id.nav_add:
                 replaceFragment(new AddFoodFragment());
@@ -124,5 +115,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mDrawerLayout.closeDrawers();
         return false;
     }
+
 }
 
