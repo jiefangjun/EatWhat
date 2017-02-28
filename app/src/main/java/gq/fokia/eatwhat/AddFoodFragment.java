@@ -32,6 +32,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import static android.app.Activity.RESULT_OK;
+import static gq.fokia.eatwhat.AllFoodFragment.foodList;
 
 /**
  * Created by fokia on 17-2-23.
@@ -86,6 +87,14 @@ public class AddFoodFragment extends Fragment {
         values.put("introduce", editIntroduce.getText().toString());
         values.put("image", absoluteImagePath);
         db.insert("food", null, values);
+        String ss = editPrice.getText().toString();
+        double price;
+        if("".equals(ss)){
+            price = 0;
+        }else
+        price = Double.valueOf(ss);
+        foodList.add(0, new Food(editName.getText().toString(), price,
+                bitmapImage));
     }
 
     private void takePhoto(){

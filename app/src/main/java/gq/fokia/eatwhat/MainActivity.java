@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             }
         });
-        allFoodFragment = new AllFoodFragment();
     }
     private void transparentState(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -86,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.right_layout, fragment);
-        //transaction.addToBackStack(null);
+        transaction.addToBackStack(null);
         transaction.commit();
     }
 
@@ -94,21 +93,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.nav_all:
-                List listFragment = fragmentManager.getFragments();
+                /*List listFragment = fragmentManager.getFragments();
                 if(!allFoodFragment.equals(listFragment.get(listFragment.size() - 1))) {
                     allFoodFragment = new AllFoodFragment();
                     replaceFragment(allFoodFragment);
-                    navigationView.setCheckedItem(R.id.nav_all);
+
+                }*/
+                if(allFoodFragment == null){
+                    allFoodFragment = new AllFoodFragment();
                 }
+                replaceFragment(allFoodFragment);
+                navigationView.setCheckedItem(R.id.nav_all);
+                Log.d("allFoodFragment",allFoodFragment.toString());
                 break;
             case R.id.nav_add:
                 replaceFragment(new AddFoodFragment());
-                fab.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(getApplicationContext(),"change click",Toast.LENGTH_LONG).show();
-                    }
-                });
             default:
                 break;
         }

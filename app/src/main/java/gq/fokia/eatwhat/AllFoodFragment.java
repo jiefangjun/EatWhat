@@ -1,5 +1,6 @@
 package gq.fokia.eatwhat;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -31,17 +32,19 @@ import java.util.Random;
 
 public class AllFoodFragment extends Fragment {
 
-    private List<Food> foodList = new ArrayList<>();
+    public static List<Food> foodList = new ArrayList<>();
     private FoodDBOpenHelper foodDBOpenHelper;
     private Bitmap bitmap;
     private View view;
     private FoodAdapter adapter;
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private SQLiteDatabase db;
+    private Cursor cursor;
+    private Food foodZero;//栈顶food对象
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         view = inflater.inflate(R.layout.allfood_fragment, container, false);
-//        initFoods();
         recyclerView = (RecyclerView) view.findViewById(R.id.recycle_view);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
         swipeRefreshLayout.setProgressBackgroundColorSchemeResource(android.R.color.white);
@@ -52,62 +55,54 @@ public class AllFoodFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-/*
-                // 开始刷新，设置当前为刷新状态
-                //swipeRefreshLayout.setRefreshing(true);
-
-                // 这里是主线程
-                // 一些比较耗时的操作，比如联网获取数据，需要放到子线程去执行
-                // TODO 获取数据
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        foodList.add(new Food("sb",65161, getImage("/storage/emulated/0/EatWhat/rest.jpg")));
-                        adapter.notifyDataSetChanged();
-
-                        Toast.makeText(getContext(), "刷新了一条数据", Toast.LENGTH_SHORT).show();
-
-                        // 加载完数据设置为不刷新状态，将下拉进度收起来
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-                }, 1200);
-
-                // System.out.println(Thread.currentThread().getName());
-
-                // 这个不能写在外边，不然会直接收起来
-                //swipeRefreshLayout.setRefreshing(false);*/
-                onRefreshFragment();
+                refreshFragment();
             }
         });
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         Log.d(getClass().toString(), "onCreateView Executed");
         return view;
-
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-        Log.d(getClass().toString(), "onStart Executed");
     }
 
     private void getFoodsData(){
-
-        foodDBOpenHelper = new FoodDBOpenHelper(getContext(),
-                "FoodClub.db", null, 1);
-        SQLiteDatabase db = foodDBOpenHelper.getWritableDatabase();
-        Cursor cursor = db.query("food", null, null, null, null, null, null, null);
-        if (cursor.moveToFirst()){
-            while (!cursor.isAfterLast()){
-                foodList.add(new Food(cursor.getString(1),
-                        cursor.getDouble(2), getImage(cursor.getString(3))));
-                cursor.moveToNext();
+        int dbSize,i = 0;
+        dbSize = cursor.getCount();
+        if(dbSize == 0){
+            Toast.makeText(getContext(),"请添加数据",Toast.LENGTH_SHORT).show();
+            return;
+        }else if(dbSize > 5 && dbSize != 0) {
+            if (cursor.moveToFirst()) {
+                while (i < 5 && !cursor.isAfterLast()) {
+                    foodList.add(new Food(cursor.getString(1),
+                            cursor.getDouble(2), getImage(cursor.getString(3))));
+                    cursor.moveToNext();
+                    i++;
+                }
+                adapter = new FoodAdapter(foodList);
             }
-            cursor.close();
+        }else if(dbSize < 5){
+            if (cursor.moveToFirst()) {
+                while (i < dbSize && !cursor.isAfterLast()) {
+                    foodList.add(new Food(cursor.getString(1),
+                            cursor.getDouble(2), getImage(cursor.getString(3))));
+                    cursor.moveToNext();
+                    i++;
+                }
+            }
+            adapter = new FoodAdapter(foodList);
         }
-        adapter = new FoodAdapter(foodList);
-//        recyclerView.setAdapter(adapter);
+    }
+
+    private void getMoreData(){
+        int position = cursor.getPosition();
+        cursor.moveToPosition(position+1);
+        int i = 0;
+        while (i < 5 && !cursor.isAfterLast()){
+            foodList.add(0, new Food(cursor.getString(1),
+                    cursor.getDouble(2), getImage(cursor.getString(3))));
+            cursor.moveToNext();
+            i++;
+        }
     }
 
     private Bitmap getImage(String imagePath){
@@ -115,8 +110,6 @@ public class AllFoodFragment extends Fragment {
             BitmapFactory bitmapFactory = new BitmapFactory();
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
-//            int imageHeight = options.outHeight;
-//            int imageWidth = options.outWidth;
             options.inJustDecodeBounds = false;
             options.inSampleSize = 2;
             bitmap = bitmapFactory.decodeFile(imagePath, options);
@@ -127,47 +120,50 @@ public class AllFoodFragment extends Fragment {
     }
 
     @Override
-    public void onPause(){
-        super.onPause();
-        //foodList.clear();
-        Log.d(getClass().toString(), "onPause Executed");
-    }
-
-    @Override
     public void onResume(){
         super.onResume();
         if(foodList.isEmpty()) {
             getFoodsData();
-            recyclerView.setAdapter(adapter);
         }
-        //onRefreshFragment();
+        refreshFragment();
+        recyclerView.setAdapter(adapter);
     }
-    public void onRefreshFragment() {
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        foodDBOpenHelper = new FoodDBOpenHelper(getContext(),
+                "FoodClub.db", null, 1);
+        db = foodDBOpenHelper.getWritableDatabase();
+        cursor = db.query("food", null, null, null, null, null, "id DESC", null);
+    }
+    public void refreshFragment() {
 
         // 开始刷新，设置当前为刷新状态
-        //swipeRefreshLayout.setRefreshing(true);
-
-        // 这里是主线程
-        // 一些比较耗时的操作，比如联网获取数据，需要放到子线程去执行
+        swipeRefreshLayout.setRefreshing(true);
         // TODO 获取数据
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                foodList.add(new Food("sb",65161, getImage("/storage/emulated/0/EatWhat/rest.jpg")));
-                adapter.notifyDataSetChanged();
-
-                Toast.makeText(getContext(), "刷新了一条数据", Toast.LENGTH_SHORT).show();
-
-                // 加载完数据设置为不刷新状态，将下拉进度收起来
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        }, 1200);
-
-        // System.out.println(Thread.currentThread().getName());
-
-        // 这个不能写在外边，不然会直接收起来
-        //swipeRefreshLayout.setRefreshing(false);
+                if(foodList.get(0) != foodZero && foodZero != null){
+                    adapter.notifyDataSetChanged();
+                    Toast.makeText(getContext(), "刷新了一条数据", Toast.LENGTH_SHORT).show();
+                    // 加载完数据设置为不刷新状态，将下拉进度收起来
+                    swipeRefreshLayout.setRefreshing(false);
+                }else if(foodZero == foodList.get(0)){
+                    getMoreData();
+                    adapter.notifyDataSetChanged();
+                    Toast.makeText(getContext(), "没有新的数据", Toast.LENGTH_SHORT).show();
+                    swipeRefreshLayout.setRefreshing(false);
+                }else if(foodZero == null){
+                    //Toast.makeText(getContext(), "", Toast.LENGTH_SHORT).show();
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+                foodZero = foodList.get(0);
+                Log.d("foodZero", foodZero.toString());
+        }}, 1200);
     }
+
 
 
 }
