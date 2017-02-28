@@ -65,14 +65,18 @@ public class AllFoodFragment extends Fragment {
     }
 
     private void getFoodsData(){
-        int dbSize,i = 0;
+        int dbSize,i = 0, length;
         dbSize = cursor.getCount();
         if(dbSize == 0){
             Toast.makeText(getContext(),"请添加数据",Toast.LENGTH_SHORT).show();
             return;
-        }else if(dbSize > 5 && dbSize != 0) {
+        }else if(dbSize > 5){
+            length = 5;
+        }else {
+            length = dbSize;
+        }
             if (cursor.moveToFirst()) {
-                while (i < 5 && !cursor.isAfterLast()) {
+                while (i < length && !cursor.isAfterLast()) {
                     foodList.add(new Food(cursor.getString(1),
                             cursor.getDouble(2), getImage(cursor.getString(3))));
                     cursor.moveToNext();
@@ -80,23 +84,14 @@ public class AllFoodFragment extends Fragment {
                 }
                 adapter = new FoodAdapter(foodList);
             }
-        }else if(dbSize < 5){
-            if (cursor.moveToFirst()) {
-                while (i < dbSize && !cursor.isAfterLast()) {
-                    foodList.add(new Food(cursor.getString(1),
-                            cursor.getDouble(2), getImage(cursor.getString(3))));
-                    cursor.moveToNext();
-                    i++;
-                }
-            }
-            adapter = new FoodAdapter(foodList);
-        }
     }
 
     private void getMoreData(){
         int position = cursor.getPosition();
-        cursor.moveToPosition(position+1);
+        Log.d("position",position+"");
+//        cursor.moveToPosition(position+1);
         int i = 0;
+        Log.d("isAfterLast",cursor.isAfterLast()+"");
         while (i < 5 && !cursor.isAfterLast()){
             foodList.add(0, new Food(cursor.getString(1),
                     cursor.getDouble(2), getImage(cursor.getString(3))));
@@ -124,9 +119,13 @@ public class AllFoodFragment extends Fragment {
         super.onResume();
         if(foodList.isEmpty()) {
             getFoodsData();
+        }if (!foodList.isEmpty()){
+            adapter = new FoodAdapter(foodList);
+            refreshFragment();
+            recyclerView.setAdapter(adapter);
+        }else {
+            Toast.makeText(getContext(), "什么也没有哦", Toast.LENGTH_LONG).show();
         }
-        refreshFragment();
-        recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -151,6 +150,13 @@ public class AllFoodFragment extends Fragment {
                     // 加载完数据设置为不刷新状态，将下拉进度收起来
                     swipeRefreshLayout.setRefreshing(false);
                 }else if(foodZero == foodList.get(0)){
+                    Log.d("db.size",cursor.getCount()+"");
+                    if(cursor.getCount() <= 5 || cursor.getPosition() == cursor.getCount()){
+                        Log.d("cusor.getCount",cursor.getCount()+"");
+                        swipeRefreshLayout.setRefreshing(false);
+                        return;
+                    }
+                    cursor.moveToPosition(foodList.size());
                     getMoreData();
                     adapter.notifyDataSetChanged();
                     Toast.makeText(getContext(), "没有新的数据", Toast.LENGTH_SHORT).show();

@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_add:
                 replaceFragment(new AddFoodFragment());
+                break;
             default:
                 break;
         }
