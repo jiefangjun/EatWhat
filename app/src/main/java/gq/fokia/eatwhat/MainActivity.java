@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mDrawerLayout = (DrawerLayout) findViewById(R.id.root_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         transparentState();
-
         initToolbar();
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, mDrawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -55,12 +54,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View v) {
                 replaceFragment(new RandomFoodFragment());
-
-
             }
         });
     }
-    private void transparentState(){
+    public void transparentState(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 //5.0 全透明实现
 //getWindow.setStatusBarColor(Color.TRANSPARENT)
@@ -74,14 +71,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
     }
-    private void initToolbar(){
+    public void initToolbar(){
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         if(toolbar != null){
             setSupportActionBar(toolbar);
         }
     }
 
-    private void replaceFragment(Fragment fragment){
+    public void replaceFragment(Fragment fragment){
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.right_layout, fragment);
@@ -93,22 +90,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.nav_all:
-                /*List listFragment = fragmentManager.getFragments();
-                if(!allFoodFragment.equals(listFragment.get(listFragment.size() - 1))) {
-                    allFoodFragment = new AllFoodFragment();
-                    replaceFragment(allFoodFragment);
-
-                }*/
                 if(allFoodFragment == null){
                     allFoodFragment = new AllFoodFragment();
                 }
                 replaceFragment(allFoodFragment);
                 navigationView.setCheckedItem(R.id.nav_all);
-                Log.d("allFoodFragment",allFoodFragment.toString());
                 break;
             case R.id.nav_add:
                 replaceFragment(new AddFoodFragment());
+                navigationView.setCheckedItem(R.id.nav_add);
                 break;
+            case R.id.nav_remove:
+                //replaceFragment(new EditFoodFragment());
             default:
                 break;
         }

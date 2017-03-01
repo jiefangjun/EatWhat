@@ -1,6 +1,8 @@
 package gq.fokia.eatwhat;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +16,10 @@ import java.util.List;
  * Created by fokia on 17-2-21.
  */
 
-public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
+public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> implements View.OnClickListener{
 
     private List<Food> mFoodList;
+    private OnRecyclerViewItemClickListener mOnItemClickListener = null;
 
     static class ViewHolder extends RecyclerView.ViewHolder{
         View foodView;
@@ -42,15 +45,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.cardview_item ,parent, false);
         final ViewHolder holder = new ViewHolder(view);
-        holder.foodImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position = holder.getAdapterPosition();
-                Food food = mFoodList.get(position);
-                Toast.makeText(v.getContext(),"you clicked view"+ food.getName(),
-                        Toast.LENGTH_LONG).show();
-            }
-        });
+        holder.itemView.setOnClickListener(this);
         return holder;
     }
 
@@ -60,10 +55,35 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
         holder.foodImage.setImageBitmap(food.getBitmap());
         holder.foodName.setText(food.getName());
         holder.foodPrice.setText(food.getPrice()+"");
+        /*holder.itemView.setTag(1,food.getName());
+        holder.itemView.setTag(2,food.getPrice());
+        holder.itemView.setTag(3,food.getIntroduce());
+        holder.itemView.setTag(4,food.getBitmap());*/
+
+        holder.itemView.setTag(food);
+        Log.d("setTag",food.toString());
     }
 
     @Override
     public int getItemCount(){
         return mFoodList.size();
+    }
+
+    public static interface OnRecyclerViewItemClickListener {
+        void onItemClick(View view , Food data);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (mOnItemClickListener != null) {
+            //注意这里使用getTag方法获取数据
+            mOnItemClickListener.onItemClick(v, (Food) v.getTag());
+            if(v.getTag() != null)
+            Log.d("getTag",v.getTag().toString());
+        }
+    }
+
+    public void setOnItemClickListener(OnRecyclerViewItemClickListener listener) {
+        this.mOnItemClickListener = listener;
     }
 }

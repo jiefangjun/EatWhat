@@ -2,6 +2,7 @@ package gq.fokia.eatwhat;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -46,9 +47,17 @@ public class AddFoodFragment extends Fragment {
     private ImageView editImage;
     private Button editSaveData;
     private FoodDBOpenHelper foodDBOpenHelper;
+    private SQLiteDatabase db;
     private Uri imageUri;
     private Bitmap bitmapImage;
     private String absoluteImagePath;
+
+    private String name;
+    private Double price;
+    private String introduce;
+    private Bitmap bitmap;
+
+    private Cursor cursor;
 
     public static final int TAKE_PHOTO = 1;
 
@@ -57,6 +66,7 @@ public class AddFoodFragment extends Fragment {
         View view = inflater.inflate(R.layout.add_food_fragment, container, false);
         foodDBOpenHelper = new FoodDBOpenHelper(getContext(),
                 "FoodClub.db", null, 1);
+        db = foodDBOpenHelper.getWritableDatabase();
         editName = (EditText) view.findViewById(R.id.edit_name);
         editPrice = (EditText) view.findViewById(R.id.edit_price);
         editImage = (ImageView) view.findViewById(R.id.edit_image);
@@ -80,7 +90,6 @@ public class AddFoodFragment extends Fragment {
 
     private void addFoodsData(){
         savePicture(bitmapImage);
-        SQLiteDatabase db = foodDBOpenHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("name", editName.getText().toString());
         values.put("price", editPrice.getText().toString());
@@ -94,6 +103,7 @@ public class AddFoodFragment extends Fragment {
         }else
         price = Double.valueOf(ss);
         foodList.add(0, new Food(editName.getText().toString(), price,
+                editIntroduce.getText().toString(),
                 bitmapImage));
     }
 
@@ -170,5 +180,62 @@ public class AddFoodFragment extends Fragment {
         } catch (IOException e) {
                 e.printStackTrace();
         }
+    }
+
+    //传参数的构造函数，用来初始化编辑界面
+    public AddFoodFragment(String name, Double price, String introduce, Bitmap image){
+        this.name = name;
+        this.price = price;
+        this.introduce = introduce;
+        this.bitmap = image;
+    }
+
+    //默认无参构造方法
+    public AddFoodFragment(){
+        //nothing
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(name != null && price != null && bitmap != null){
+            String[] selectionArgs = {name};
+            Log.d("selectionArgs", selectionArgs.toString());
+            cursor = db.query("food",null, "name=?", selectionArgs, null, null ,null);
+            Log.d("cursor position",cursor.getPosition()+"");
+            editName.setText(name);
+            editPrice.setText(price+"");
+            editIntroduce.setText(introduce);
+            editImage.setImageBitmap(bitmap);
+
+            editSaveData.setOnClickListener(new View.OnClickListener(){
+
+                @Override
+                public void onClick(View v) {
+                    updateData(cursor.getPosition());
+                }
+            });
+        }
+    }
+
+    private void updateData(int position){
+        savePicture(bitmap);
+        ContentValues values = new ContentValues();
+        values.put("name", editName.getText().toString());
+        values.put("price", editPrice.getText().toString());
+        values.put("introduce", editIntroduce.getText().toString());
+        values.put("image", absoluteImagePath);
+        String p = position+"";
+        Log.d("p",p);
+        db.update("food", values, p, null);
+        /*String ss = editPrice.getText().toString();
+        double price;
+        if("".equals(ss)){
+            price = 0;
+        }else
+            price = Double.valueOf(ss);
+        foodList.add(0, new Food(editName.getText().toString(), price,
+                editIntroduce.getText().toString(),
+                bitmapImage));*/
     }
 }

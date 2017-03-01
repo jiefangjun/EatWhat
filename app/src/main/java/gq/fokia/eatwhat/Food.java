@@ -11,10 +11,12 @@ public class Food {
     private String name;
     private double price;
     private Bitmap imageBitmap;
+    private String introduce;
 
-    public Food(String name, double price, Bitmap imageBitmap){
+    public Food(String name, double price, String introduce, Bitmap imageBitmap){
         this.name = name;
         this.price = price;
+        this.introduce = introduce;
         this.imageBitmap = imageBitmap;
     }
     public String getName(){
@@ -25,6 +27,10 @@ public class Food {
     }
     public Bitmap getBitmap(){
         return imageBitmap;
+    }
+
+    public String getIntroduce(){
+        return introduce;
     }
 
 }

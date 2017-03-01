@@ -42,6 +42,7 @@ public class AllFoodFragment extends Fragment {
     private SQLiteDatabase db;
     private Cursor cursor;
     private Food foodZero;//栈顶food对象
+    private MainActivity mactivity;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         view = inflater.inflate(R.layout.allfood_fragment, container, false);
@@ -78,7 +79,7 @@ public class AllFoodFragment extends Fragment {
             if (cursor.moveToFirst()) {
                 while (i < length && !cursor.isAfterLast()) {
                     foodList.add(new Food(cursor.getString(1),
-                            cursor.getDouble(2), getImage(cursor.getString(3))));
+                            cursor.getDouble(2), cursor.getString(4),getImage(cursor.getString(3))));
                     cursor.moveToNext();
                     i++;
                 }
@@ -94,7 +95,7 @@ public class AllFoodFragment extends Fragment {
         Log.d("isAfterLast",cursor.isAfterLast()+"");
         while (i < 5 && !cursor.isAfterLast()){
             foodList.add(0, new Food(cursor.getString(1),
-                    cursor.getDouble(2), getImage(cursor.getString(3))));
+                    cursor.getDouble(2), cursor.getString(4), getImage(cursor.getString(3))));
             cursor.moveToNext();
             i++;
         }
@@ -123,9 +124,22 @@ public class AllFoodFragment extends Fragment {
             adapter = new FoodAdapter(foodList);
             refreshFragment();
             recyclerView.setAdapter(adapter);
+
         }else {
             Toast.makeText(getContext(), "什么也没有哦", Toast.LENGTH_LONG).show();
         }
+        if(adapter != null)
+        adapter.setOnItemClickListener(new FoodAdapter.OnRecyclerViewItemClickListener() {
+            @Override
+            public void onItemClick(View view, Food data) {
+                if (mactivity == null){
+                    mactivity = (MainActivity) getActivity();
+                }
+                if(data != null)
+                mactivity.replaceFragment(new AddFoodFragment(data.getName(), data.getPrice(),
+                        data.getIntroduce(), data.getBitmap()));
+            }
+        });
     }
 
     @Override
@@ -146,23 +160,19 @@ public class AllFoodFragment extends Fragment {
             public void run() {
                 if(foodList.get(0) != foodZero && foodZero != null){
                     adapter.notifyDataSetChanged();
-                    Toast.makeText(getContext(), "刷新了一条数据", Toast.LENGTH_SHORT).show();
                     // 加载完数据设置为不刷新状态，将下拉进度收起来
                     swipeRefreshLayout.setRefreshing(false);
                 }else if(foodZero == foodList.get(0)){
                     Log.d("db.size",cursor.getCount()+"");
                     if(cursor.getCount() <= 5 || cursor.getPosition() == cursor.getCount()){
-                        Log.d("cusor.getCount",cursor.getCount()+"");
                         swipeRefreshLayout.setRefreshing(false);
                         return;
                     }
                     cursor.moveToPosition(foodList.size());
                     getMoreData();
                     adapter.notifyDataSetChanged();
-                    Toast.makeText(getContext(), "没有新的数据", Toast.LENGTH_SHORT).show();
                     swipeRefreshLayout.setRefreshing(false);
                 }else if(foodZero == null){
-                    //Toast.makeText(getContext(), "", Toast.LENGTH_SHORT).show();
                     swipeRefreshLayout.setRefreshing(false);
                 }
                 foodZero = foodList.get(0);
