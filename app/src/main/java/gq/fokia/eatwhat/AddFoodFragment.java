@@ -57,7 +57,6 @@ public class AddFoodFragment extends Fragment {
     private String introduce;
     private Bitmap bitmap;
 
-    private Cursor cursor;
 
     public static final int TAKE_PHOTO = 1;
 
@@ -199,10 +198,6 @@ public class AddFoodFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if(name != null && price != null && bitmap != null){
-            String[] selectionArgs = {name};
-            Log.d("selectionArgs", selectionArgs.toString());
-            cursor = db.query("food",null, "name=?", selectionArgs, null, null ,null);
-            Log.d("cursor position",cursor.getPosition()+"");
             editName.setText(name);
             editPrice.setText(price+"");
             editIntroduce.setText(introduce);
@@ -212,22 +207,23 @@ public class AddFoodFragment extends Fragment {
 
                 @Override
                 public void onClick(View v) {
-                    updateData(cursor.getPosition());
+                    updateData(name);
                 }
             });
         }
     }
 
-    private void updateData(int position){
+    private void updateData(String name){
         savePicture(bitmap);
         ContentValues values = new ContentValues();
         values.put("name", editName.getText().toString());
         values.put("price", editPrice.getText().toString());
         values.put("introduce", editIntroduce.getText().toString());
         values.put("image", absoluteImagePath);
-        String p = position+"";
-        Log.d("p",p);
-        db.update("food", values, p, null);
+        String args[] = {name};
+        db.update("food", values, "name=?" , args);
+        foodList.clear();
+        //foodList.remove();
         /*String ss = editPrice.getText().toString();
         double price;
         if("".equals(ss)){
