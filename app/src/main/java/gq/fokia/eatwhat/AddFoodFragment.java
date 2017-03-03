@@ -131,14 +131,14 @@ public class AddFoodFragment extends Fragment {
     public void setImage() {
         try {
             BitmapFactory bitmapFactory = new BitmapFactory();
-            /*BitmapFactory.Options options = new BitmapFactory.Options();
+            BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
             options.inJustDecodeBounds = false;
             options.inSampleSize = 2;
             bitmapImage = bitmapFactory.decodeStream(getContext().getContentResolver()
-                    .openInputStream(imageUri), null, options);*/
-            bitmapImage = bitmapFactory.decodeStream(getContext().getContentResolver()
-                    .openInputStream(imageUri));
+                    .openInputStream(imageUri), null, options);
+            /*bitmapImage = bitmapFactory.decodeStream(getContext().getContentResolver()
+                    .openInputStream(imageUri));*/
             editImage.setImageBitmap(bitmapImage);
             Log.d(getClass().toString(), "setImage success");
         } catch (FileNotFoundException e) {
@@ -152,12 +152,15 @@ public class AddFoodFragment extends Fragment {
             case TAKE_PHOTO:
                 if(resultCode == RESULT_OK){
                     cutPhoto(2,1,280,160,imageUri,TAKE_CUT);
-                    setImage();
+                    //setImage();
                 }
                 break;
             case TAKE_CUT:
                 //拍照 拿到剪切数据
-                setImage();
+                //cutPhoto(2,1,280,160,imageUri,TAKE_CUT);
+                if(resultCode == RESULT_OK) {
+                    setImage();
+                }
                 break;
             default:
                 break;
@@ -177,7 +180,7 @@ public class AddFoodFragment extends Fragment {
         FileOutputStream out;
         try {
                 out = new FileOutputStream(file);
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 30, out);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 40, out);
                 out.flush();
                 out.close();
         } catch (FileNotFoundException e) {
@@ -220,6 +223,10 @@ public class AddFoodFragment extends Fragment {
     }
 
     private void updateData(String name){
+        if(imageUri == null){
+            String path = Environment.getExternalStorageDirectory().toString() + "/EatWhat/" + editName.toString() + ".jpg";
+            imageUri = Uri.parse(path);
+        }
         setImage();
         savePicture(bitmap);
         ContentValues values = new ContentValues();

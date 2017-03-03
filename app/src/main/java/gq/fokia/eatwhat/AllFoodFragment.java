@@ -107,8 +107,8 @@ public class AllFoodFragment extends Fragment {
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
             options.inJustDecodeBounds = false;
-            options.inSampleSize = 2;
-            bitmap = bitmapFactory.decodeFile(imagePath, options);
+            options.inSampleSize = 1;
+            bitmap = bitmapFactory.decodeFile(imagePath);
         }catch (Exception e){
             e.printStackTrace();
         }
