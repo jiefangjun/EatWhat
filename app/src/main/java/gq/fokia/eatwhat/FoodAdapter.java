@@ -55,11 +55,6 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> im
         holder.foodImage.setImageBitmap(food.getBitmap());
         holder.foodName.setText(food.getName());
         holder.foodPrice.setText(food.getPrice()+"");
-        /*holder.itemView.setTag(1,food.getName());
-        holder.itemView.setTag(2,food.getPrice());
-        holder.itemView.setTag(3,food.getIntroduce());
-        holder.itemView.setTag(4,food.getBitmap());*/
-
         holder.itemView.setTag(food);
         Log.d("setTag",food.toString());
     }

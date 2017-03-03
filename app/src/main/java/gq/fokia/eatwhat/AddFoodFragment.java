@@ -59,6 +59,7 @@ public class AddFoodFragment extends Fragment {
 
 
     public static final int TAKE_PHOTO = 1;
+    public static final int TAKE_CUT = 2;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -130,14 +131,14 @@ public class AddFoodFragment extends Fragment {
     public void setImage() {
         try {
             BitmapFactory bitmapFactory = new BitmapFactory();
-            BitmapFactory.Options options = new BitmapFactory.Options();
+            /*BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
-//            int imageHeight = options.outHeight;
-//            int imageWidth = options.outWidth;
             options.inJustDecodeBounds = false;
             options.inSampleSize = 2;
             bitmapImage = bitmapFactory.decodeStream(getContext().getContentResolver()
-                    .openInputStream(imageUri), null, options);
+                    .openInputStream(imageUri), null, options);*/
+            bitmapImage = bitmapFactory.decodeStream(getContext().getContentResolver()
+                    .openInputStream(imageUri));
             editImage.setImageBitmap(bitmapImage);
             Log.d(getClass().toString(), "setImage success");
         } catch (FileNotFoundException e) {
@@ -150,8 +151,13 @@ public class AddFoodFragment extends Fragment {
         switch (requestCode){
             case TAKE_PHOTO:
                 if(resultCode == RESULT_OK){
+                    cutPhoto(2,1,280,160,imageUri,TAKE_CUT);
                     setImage();
                 }
+                break;
+            case TAKE_CUT:
+                //拍照 拿到剪切数据
+                setImage();
                 break;
             default:
                 break;
@@ -214,6 +220,7 @@ public class AddFoodFragment extends Fragment {
     }
 
     private void updateData(String name){
+        setImage();
         savePicture(bitmap);
         ContentValues values = new ContentValues();
         values.put("name", editName.getText().toString());
@@ -223,7 +230,6 @@ public class AddFoodFragment extends Fragment {
         String args[] = {name};
         db.update("food", values, "name=?" , args);
         foodList.clear();
-        //foodList.remove();
         /*String ss = editPrice.getText().toString();
         double price;
         if("".equals(ss)){
@@ -233,5 +239,24 @@ public class AddFoodFragment extends Fragment {
         foodList.add(0, new Food(editName.getText().toString(), price,
                 editIntroduce.getText().toString(),
                 bitmapImage));*/
+    }
+
+    private void cutPhoto(int aspectX,int aspectY,int outputX,int outputY,Uri uri,int requestCode) {
+        // 裁剪图片意图
+        Intent in = new Intent("com.android.camera.action.CROP");
+        in.setDataAndType(uri, "image/*");
+        in.putExtra("crop", "true");
+        // 裁剪框的比例，2：1
+        in.putExtra("aspectX", aspectX);
+        in.putExtra("aspectY", aspectY);
+        // 裁剪后输出图片的尺寸大小
+        in.putExtra("outputX", outputX);
+        in.putExtra("outputY", outputY);
+        in.putExtra("scale", true);
+        in.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        in.putExtra("return-data", true);
+        in.putExtra("outputFormat", "PNG");// 图片格式
+        in.putExtra("noFaceDetection", true);// 取消人脸识别
+        startActivityForResult(in, requestCode);// 开启一个带有返回值的Activity
     }
 }
