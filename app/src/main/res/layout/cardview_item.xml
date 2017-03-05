@@ -15,36 +15,37 @@
     app:cardUseCompatPadding="true"
     app:cardPreventCornerOverlap="false">
 
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/food_image"
-            android:layout_width="280dp"
-            android:layout_height="160dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignWithParentIfMissing="false"
             app:srcCompat="@mipmap/ic_launcher"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:src="@mipmap/ic_launcher"/>
+            android:src="@mipmap/ic_launcher"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:adjustViewBounds="true"/>
 
         <TextView
-            android:text="name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/food_name"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_alignParentStart="true"
             android:layout_below="@+id/food_image"
-            android:layout_alignParentStart="true" />
+            android:text="name" />
 
         <TextView
-            android:text="price"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/food_price"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_alignParentStart="true"
             android:layout_below="@+id/food_name"
-            android:layout_alignParentStart="true" />
+            android:text="price" />
 
     </RelativeLayout>
 

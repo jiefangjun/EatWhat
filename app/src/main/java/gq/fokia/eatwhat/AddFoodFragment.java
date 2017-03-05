@@ -49,7 +49,6 @@ public class AddFoodFragment extends Fragment {
     private FoodDBOpenHelper foodDBOpenHelper;
     private SQLiteDatabase db;
     private Uri imageUri;
-    private Bitmap bitmapImage;
     private String absoluteImagePath;
 
     private String name;
@@ -84,7 +83,7 @@ public class AddFoodFragment extends Fragment {
     }
 
     private void addFoodsData(){
-        savePicture(bitmapImage);
+        savePicture(bitmap);
         ContentValues values = new ContentValues();
         values.put("name", editName.getText().toString());
         values.put("price", editPrice.getText().toString());
@@ -99,7 +98,7 @@ public class AddFoodFragment extends Fragment {
         price = Double.valueOf(ss);
         foodList.add(0, new Food(editName.getText().toString(), price,
                 editIntroduce.getText().toString(),
-                bitmapImage));
+                bitmap));
     }
 
     private void takePhoto(){
@@ -126,19 +125,21 @@ public class AddFoodFragment extends Fragment {
     public Bitmap getBitmap(){
         try {
             BitmapFactory bitmapFactory = new BitmapFactory();
-            BitmapFactory.Options options = new BitmapFactory.Options();
+            /*BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
             options.inJustDecodeBounds = false;
             options.inSampleSize = 2;
             bitmap = bitmapFactory.decodeStream(getContext().getContentResolver()
-                    .openInputStream(imageUri), null, options);
+                    .openInputStream(imageUri), null, options);*/
+            bitmap = bitmapFactory.decodeStream(getContext().getContentResolver()
+            .openInputStream(imageUri));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         return bitmap;
     }
 
-    public void setImage() {
+/*    public void setImage() {
         try {
             BitmapFactory bitmapFactory = new BitmapFactory();
             BitmapFactory.Options options = new BitmapFactory.Options();
@@ -152,14 +153,14 @@ public class AddFoodFragment extends Fragment {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         switch (requestCode){
             case TAKE_PHOTO:
                 if(resultCode == RESULT_OK){
-                    cutPhoto(2,1,280,160,imageUri,TAKE_CUT);
+                    cutPhoto(4,3,600,450,imageUri,TAKE_CUT);
                 }
                 break;
             case TAKE_CUT:
@@ -185,7 +186,7 @@ public class AddFoodFragment extends Fragment {
         FileOutputStream out;
         try {
                 out = new FileOutputStream(file);
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 40, out);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
                 out.flush();
                 out.close();
         } catch (FileNotFoundException e) {
@@ -217,13 +218,6 @@ public class AddFoodFragment extends Fragment {
             editIntroduce.setText(introduce);
             editImage.setImageBitmap(bitmap);
 
-            editImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    takePhoto();
-                }
-            });
-
             editSaveData.setOnClickListener(new View.OnClickListener(){
 
                 @Override
@@ -231,15 +225,25 @@ public class AddFoodFragment extends Fragment {
                     updateData(name);
                 }
             });
+
+        }else if(bitmap != null){
+            editImage.setImageBitmap(bitmap);
         }
+        editImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                takePhoto();
+            }
+        });
+
     }
 
     private void updateData(String name){
-        if(imageUri == null){
+        /*if(imageUri == null){
             String path = Environment.getExternalStorageDirectory().toString() + "/EatWhat/" + editName.toString() + ".jpg";
             imageUri = Uri.parse(path);
         }
-        //setImage();
+        //setImage();*/
         savePicture(bitmap);
         ContentValues values = new ContentValues();
         values.put("name", editName.getText().toString());
@@ -256,7 +260,7 @@ public class AddFoodFragment extends Fragment {
         Intent in = new Intent("com.android.camera.action.CROP");
         in.setDataAndType(uri, "image/*");
         in.putExtra("crop", "true");
-        // 裁剪框的比例，2：1
+        // 裁剪框的比例
         in.putExtra("aspectX", aspectX);
         in.putExtra("aspectY", aspectY);
         // 裁剪后输出图片的尺寸大小
@@ -264,8 +268,8 @@ public class AddFoodFragment extends Fragment {
         in.putExtra("outputY", outputY);
         in.putExtra("scale", true);
         in.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-        in.putExtra("return-data", true);
-        in.putExtra("outputFormat", "jpg");// 图片格式
+        in.putExtra("return-data", false);
+        in.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());// 图片格式
         in.putExtra("noFaceDetection", true);// 取消人脸识别
         startActivityForResult(in, requestCode);// 开启一个带有返回值的Activity
     }

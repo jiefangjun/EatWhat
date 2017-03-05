@@ -69,7 +69,7 @@ public class AllFoodFragment extends Fragment {
         int dbSize,i = 0, length;
         dbSize = cursor.getCount();
         if(dbSize == 0){
-            Toast.makeText(getContext(),"请添加数据",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),"什么也没有哦，请添加数据",Toast.LENGTH_SHORT).show();
             return;
         }else if(dbSize > 5){
             length = 5;
@@ -104,10 +104,11 @@ public class AllFoodFragment extends Fragment {
     private Bitmap getImage(String imagePath){
         try {
             BitmapFactory bitmapFactory = new BitmapFactory();
-            BitmapFactory.Options options = new BitmapFactory.Options();
+            /*BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
             options.inJustDecodeBounds = false;
             options.inSampleSize = 1;
+            bitmap = bitmapFactory.decodeFile(imagePath);*/
             bitmap = bitmapFactory.decodeFile(imagePath);
         }catch (Exception e){
             e.printStackTrace();
@@ -125,9 +126,9 @@ public class AllFoodFragment extends Fragment {
             refreshFragment();
             recyclerView.setAdapter(adapter);
 
-        }else {
-            Toast.makeText(getContext(), "什么也没有哦", Toast.LENGTH_LONG).show();
-        }
+        }/*else {
+            //Toast.makeText(getContext(), "什么也没有哦", Toast.LENGTH_LONG).show();
+        }*/
         if(adapter != null)
         adapter.setOnItemClickListener(new FoodAdapter.OnRecyclerViewItemClickListener() {
             @Override
