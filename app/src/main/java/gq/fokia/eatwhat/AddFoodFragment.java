@@ -55,7 +55,7 @@ public class AddFoodFragment extends Fragment {
     private String name;
     private Double price;
     private String introduce;
-    private Bitmap bitmap;
+    private Bitmap bitmap;//初始addFoodfragment时传递的bitmap
 
 
     public static final int TAKE_PHOTO = 1;
@@ -70,12 +70,7 @@ public class AddFoodFragment extends Fragment {
         editName = (EditText) view.findViewById(R.id.edit_name);
         editPrice = (EditText) view.findViewById(R.id.edit_price);
         editImage = (ImageView) view.findViewById(R.id.edit_image);
-        editImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                takePhoto();
-            }
-        });
+
         editIntroduce = (EditText) view.findViewById(R.id.edit_introduce);
         editSaveData = (Button) view.findViewById(R.id.edit_save_data);
         editSaveData.setOnClickListener(new View.OnClickListener() {
@@ -128,6 +123,21 @@ public class AddFoodFragment extends Fragment {
         startActivityForResult(intent, TAKE_PHOTO);
     }
 
+    public Bitmap getBitmap(){
+        try {
+            BitmapFactory bitmapFactory = new BitmapFactory();
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            options.inJustDecodeBounds = false;
+            options.inSampleSize = 2;
+            bitmap = bitmapFactory.decodeStream(getContext().getContentResolver()
+                    .openInputStream(imageUri), null, options);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return bitmap;
+    }
+
     public void setImage() {
         try {
             BitmapFactory bitmapFactory = new BitmapFactory();
@@ -137,8 +147,6 @@ public class AddFoodFragment extends Fragment {
             options.inSampleSize = 2;
             bitmapImage = bitmapFactory.decodeStream(getContext().getContentResolver()
                     .openInputStream(imageUri), null, options);
-            /*bitmapImage = bitmapFactory.decodeStream(getContext().getContentResolver()
-                    .openInputStream(imageUri));*/
             editImage.setImageBitmap(bitmapImage);
             Log.d(getClass().toString(), "setImage success");
         } catch (FileNotFoundException e) {
@@ -152,14 +160,11 @@ public class AddFoodFragment extends Fragment {
             case TAKE_PHOTO:
                 if(resultCode == RESULT_OK){
                     cutPhoto(2,1,280,160,imageUri,TAKE_CUT);
-                    //setImage();
                 }
                 break;
             case TAKE_CUT:
-                //拍照 拿到剪切数据
-                //cutPhoto(2,1,280,160,imageUri,TAKE_CUT);
                 if(resultCode == RESULT_OK) {
-                    setImage();
+                    getBitmap();
                 }
                 break;
             default:
@@ -212,6 +217,13 @@ public class AddFoodFragment extends Fragment {
             editIntroduce.setText(introduce);
             editImage.setImageBitmap(bitmap);
 
+            editImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    takePhoto();
+                }
+            });
+
             editSaveData.setOnClickListener(new View.OnClickListener(){
 
                 @Override
@@ -227,7 +239,7 @@ public class AddFoodFragment extends Fragment {
             String path = Environment.getExternalStorageDirectory().toString() + "/EatWhat/" + editName.toString() + ".jpg";
             imageUri = Uri.parse(path);
         }
-        setImage();
+        //setImage();
         savePicture(bitmap);
         ContentValues values = new ContentValues();
         values.put("name", editName.getText().toString());
@@ -237,15 +249,6 @@ public class AddFoodFragment extends Fragment {
         String args[] = {name};
         db.update("food", values, "name=?" , args);
         foodList.clear();
-        /*String ss = editPrice.getText().toString();
-        double price;
-        if("".equals(ss)){
-            price = 0;
-        }else
-            price = Double.valueOf(ss);
-        foodList.add(0, new Food(editName.getText().toString(), price,
-                editIntroduce.getText().toString(),
-                bitmapImage));*/
     }
 
     private void cutPhoto(int aspectX,int aspectY,int outputX,int outputY,Uri uri,int requestCode) {
@@ -262,8 +265,9 @@ public class AddFoodFragment extends Fragment {
         in.putExtra("scale", true);
         in.putExtra(MediaStore.EXTRA_OUTPUT, uri);
         in.putExtra("return-data", true);
-        in.putExtra("outputFormat", "PNG");// 图片格式
+        in.putExtra("outputFormat", "jpg");// 图片格式
         in.putExtra("noFaceDetection", true);// 取消人脸识别
         startActivityForResult(in, requestCode);// 开启一个带有返回值的Activity
     }
+
 }
