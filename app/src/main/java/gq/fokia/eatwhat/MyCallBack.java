@@ -4,9 +4,11 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 
 import java.util.Collections;
 
+import static gq.fokia.eatwhat.AllFoodFragment.db;
 import static gq.fokia.eatwhat.AllFoodFragment.foodList;
 import static gq.fokia.eatwhat.AllFoodFragment.recyclerView;
 
@@ -57,10 +59,13 @@ public class MyCallBack extends ItemTouchHelper.Callback {
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-        int positon = viewHolder.getAdapterPosition();
-        recyclerView.getAdapter().notifyItemRemoved(positon);
-        foodList.remove(positon);
-        //TODO 从内存卡中删除数据
+        int position = viewHolder.getAdapterPosition();
+        recyclerView.getAdapter().notifyItemRemoved(position);
+        //TODO 从数据库中删除数据
+        Food food = foodList.get(position);
+        Log.d("position food name", food.getName());
+        db.delete("food", "name=?", new String[]{food.getName()});
+        foodList.remove(position);
     }
 
     //选中放大viewHolder

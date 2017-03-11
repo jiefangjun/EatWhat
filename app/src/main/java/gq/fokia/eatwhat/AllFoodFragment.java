@@ -35,12 +35,12 @@ public class AllFoodFragment extends Fragment {
 
     public static List<Food> foodList = new ArrayList<>();
     private FoodDBOpenHelper foodDBOpenHelper;
+    public static SQLiteDatabase db;
+    public static RecyclerView recyclerView; //为了Itemcallback可以获得此recvclerview--public
     private Bitmap bitmap;
     private View view;
     private FoodAdapter adapter;
-    public static RecyclerView recyclerView; //为了Itemcallback可以获得此recvclerview--public
     private SwipeRefreshLayout swipeRefreshLayout;
-    private SQLiteDatabase db;
     private Cursor cursor;
     private Food foodZero;//栈顶food对象
     private MainActivity mactivity;
@@ -158,7 +158,7 @@ public class AllFoodFragment extends Fragment {
 
         // 开始刷新，设置当前为刷新状态
         swipeRefreshLayout.setRefreshing(true);
-        // TODO 获取数据
+        // 获取数据
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
