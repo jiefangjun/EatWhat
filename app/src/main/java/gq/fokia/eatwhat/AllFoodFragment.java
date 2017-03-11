@@ -12,6 +12,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +38,7 @@ public class AllFoodFragment extends Fragment {
     private Bitmap bitmap;
     private View view;
     private FoodAdapter adapter;
-    private RecyclerView recyclerView;
+    public static RecyclerView recyclerView; //为了Itemcallback可以获得此recvclerview--public
     private SwipeRefreshLayout swipeRefreshLayout;
     private SQLiteDatabase db;
     private Cursor cursor;
@@ -150,6 +151,8 @@ public class AllFoodFragment extends Fragment {
                 "FoodClub.db", null, 1);
         db = foodDBOpenHelper.getWritableDatabase();
         cursor = db.query("food", null, null, null, null, null, "id DESC", null);
+        final ItemTouchHelper helper = new ItemTouchHelper(new MyCallBack());
+        helper.attachToRecyclerView(recyclerView);
     }
     public void refreshFragment() {
 
