@@ -13,22 +13,9 @@
             android:id="@+id/nav_all"
             android:icon="@mipmap/ic_launcher"
             android:title="全部"/>
+        <item
+            android:id="@+id/nav_add"
+            android:icon="@mipmap/ic_launcher"
+            android:title="添加"/>
     </group>
-
-    <item android:title="操作">
-
-        <menu>
-            <item
-                android:id="@+id/nav_add"
-                android:icon="@mipmap/ic_launcher"
-                android:title="添加"/>
-            <item
-                android:id="@+id/nav_remove"
-                android:icon="@mipmap/ic_launcher"
-                android:title="删减"/>
-        </menu>
-
-    </item>
-
-
 </menu>

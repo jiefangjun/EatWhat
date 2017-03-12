@@ -173,6 +173,8 @@ public class AddFoodFragment extends Fragment {
         }
     }
 
+
+
     public void savePicture(Bitmap bitmap) {
         String picturePath = Environment.getExternalStorageDirectory().toString() + "/EatWhat/";
         Log.d(getClass().toString(), picturePath);

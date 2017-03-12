@@ -100,8 +100,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 replaceFragment(new AddFoodFragment());
                 navigationView.setCheckedItem(R.id.nav_add);
                 break;
-            case R.id.nav_remove:
-                //replaceFragment(new EditFoodFragment());
             default:
                 break;
         }

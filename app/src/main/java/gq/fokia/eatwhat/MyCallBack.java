@@ -1,11 +1,13 @@
 package gq.fokia.eatwhat;
 
+import android.os.Environment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 
+import java.io.File;
 import java.util.Collections;
 
 import static gq.fokia.eatwhat.AllFoodFragment.db;
@@ -61,11 +63,18 @@ public class MyCallBack extends ItemTouchHelper.Callback {
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
         int position = viewHolder.getAdapterPosition();
         recyclerView.getAdapter().notifyItemRemoved(position);
-        //TODO 从数据库中删除数据
         Food food = foodList.get(position);
         Log.d("position food name", food.getName());
         db.delete("food", "name=?", new String[]{food.getName()});
         foodList.remove(position);
+        String picturePath = Environment.getExternalStorageDirectory().toString() + "/EatWhat/";
+        Log.d(getClass().toString(), picturePath);
+        File dir = new File(picturePath);
+        if (!dir.exists()){
+            dir.mkdirs();
+        }
+        File file = new File(picturePath, food.getName()+".jpg");
+        file.delete();
     }
 
     //选中放大viewHolder
