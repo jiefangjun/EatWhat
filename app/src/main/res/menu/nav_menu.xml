@@ -1,21 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_like"
-            android:icon="@mipmap/ic_launcher"
-            android:title="喜欢"/>
-        <item
-            android:id="@+id/nav_recent"
-            android:icon="@mipmap/ic_launcher"
-            android:title="最近"/>
-        <item
-            android:id="@+id/nav_all"
-            android:icon="@mipmap/ic_launcher"
-            android:title="全部"/>
-        <item
-            android:id="@+id/nav_add"
-            android:icon="@mipmap/ic_launcher"
-            android:title="添加"/>
-    </group>
+    <item android:title="Food">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                android:id="@+id/nav_like"
+                android:icon="@mipmap/ic_launcher"
+                android:title="喜欢"/>
+                <item
+                android:id="@+id/nav_recent"
+                android:icon="@mipmap/ic_launcher"
+                android:title="最近"/>
+            </group>
+            <group android:checkableBehavior="single">
+                <item
+                android:id="@+id/nav_all"
+                android:icon="@mipmap/ic_launcher"
+                android:title="全部"/>
+            <item
+                android:id="@+id/nav_add"
+                android:icon="@mipmap/ic_launcher"
+                android:title="添加"/>
+        </group>
+        </menu>
+    </item>
+    <item android:title="Others">
+        <menu>
+            <group
+                android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_settings"
+                    android:icon="@mipmap/ic_launcher"
+                    android:title="设置"/>
+                <item
+                    android:id="@+id/nav_about"
+                    android:icon="@mipmap/ic_launcher"
+                    android:title="关于"/>
+            </group>
+        </menu>
+    </item>
 </menu>
