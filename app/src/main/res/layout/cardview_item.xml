@@ -47,6 +47,14 @@
             android:layout_below="@+id/food_name"
             android:text="price" />
 
+        <CheckBox
+            android:id="@+id/food_love"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/food_image"
+            android:layout_alignParentEnd="true"
+            android:layout_alignBottom="@+id/food_price" />
+
     </RelativeLayout>
 
 
