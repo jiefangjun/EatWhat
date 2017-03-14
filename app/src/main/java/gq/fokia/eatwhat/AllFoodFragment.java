@@ -80,7 +80,9 @@ public class AllFoodFragment extends Fragment {
             if (cursor.moveToFirst()) {
                 while (i < length && !cursor.isAfterLast()) {
                     foodList.add(new Food(cursor.getString(1),
-                            cursor.getDouble(2), cursor.getString(4),getImage(cursor.getString(3))));
+                            cursor.getDouble(2), cursor.getString(4),
+                            getImage(cursor.getString(3)),
+                            cursor.getInt(5)));
                     cursor.moveToNext();
                     i++;
                 }
@@ -96,7 +98,7 @@ public class AllFoodFragment extends Fragment {
         Log.d("isAfterLast",cursor.isAfterLast()+"");
         while (i < 5 && !cursor.isAfterLast()){
             foodList.add(0, new Food(cursor.getString(1),
-                    cursor.getDouble(2), cursor.getString(4), getImage(cursor.getString(3))));
+                    cursor.getDouble(2), cursor.getString(4), getImage(cursor.getString(3)), cursor.getInt(5)));
             cursor.moveToNext();
             i++;
         }

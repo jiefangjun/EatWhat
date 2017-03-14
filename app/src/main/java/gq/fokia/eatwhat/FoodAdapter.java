@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +27,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> im
         ImageView foodImage;
         TextView foodName;
         TextView foodPrice;
+        CheckBox foodLike;
 
         public ViewHolder(View view){
             super(view);
@@ -33,6 +35,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> im
             foodImage = (ImageView) view.findViewById(R.id.food_image);
             foodName = (TextView) view.findViewById(R.id.food_name);
             foodPrice = (TextView) view.findViewById(R.id.food_price);
+            foodLike = (CheckBox) view.findViewById(R.id.food_like);
         }
     }
 
@@ -55,8 +58,8 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> im
         holder.foodImage.setImageBitmap(food.getBitmap());
         holder.foodName.setText(food.getName());
         holder.foodPrice.setText(food.getPrice()+"");
+        holder.foodLike.setChecked(food.getIsLike() != 0);
         holder.itemView.setTag(food);
-        Log.d("setTag",food.toString());
     }
 
     @Override

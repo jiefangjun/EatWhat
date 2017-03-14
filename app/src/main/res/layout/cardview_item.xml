@@ -48,7 +48,7 @@
             android:text="price" />
 
         <CheckBox
-            android:id="@+id/food_love"
+            android:id="@+id/food_like"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/food_image"

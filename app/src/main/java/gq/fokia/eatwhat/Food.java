@@ -12,12 +12,14 @@ public class Food {
     private double price;
     private Bitmap imageBitmap;
     private String introduce;
+    private int isLike;
 
-    public Food(String name, double price, String introduce, Bitmap imageBitmap){
+    public Food(String name, double price, String introduce, Bitmap imageBitmap, int isLike){
         this.name = name;
         this.price = price;
         this.introduce = introduce;
         this.imageBitmap = imageBitmap;
+        this.isLike = isLike;
     }
     public String getName(){
         return name;
@@ -31,6 +33,10 @@ public class Food {
 
     public String getIntroduce(){
         return introduce;
+    }
+
+    public int getIsLike(){
+        return isLike;
     }
 
 }

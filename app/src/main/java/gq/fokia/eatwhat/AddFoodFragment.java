@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -45,6 +46,7 @@ public class AddFoodFragment extends Fragment {
     private EditText editPrice;
     private EditText editIntroduce;
     private ImageView editImage;
+    private CheckBox editLike;
     private Button editSaveData;
     private FoodDBOpenHelper foodDBOpenHelper;
     private SQLiteDatabase db;
@@ -69,8 +71,8 @@ public class AddFoodFragment extends Fragment {
         editName = (EditText) view.findViewById(R.id.edit_name);
         editPrice = (EditText) view.findViewById(R.id.edit_price);
         editImage = (ImageView) view.findViewById(R.id.edit_image);
-
         editIntroduce = (EditText) view.findViewById(R.id.edit_introduce);
+        editLike = (CheckBox) view.findViewById(R.id.edit_like);
         editSaveData = (Button) view.findViewById(R.id.edit_save_data);
         editSaveData.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,7 +100,7 @@ public class AddFoodFragment extends Fragment {
         price = Double.valueOf(ss);
         foodList.add(0, new Food(editName.getText().toString(), price,
                 editIntroduce.getText().toString(),
-                bitmap));
+                bitmap, setEditLike()));
     }
 
     private void takePhoto(){
@@ -274,6 +276,13 @@ public class AddFoodFragment extends Fragment {
         in.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());// 图片格式
         in.putExtra("noFaceDetection", true);// 取消人脸识别
         startActivityForResult(in, requestCode);// 开启一个带有返回值的Activity
+    }
+
+    public int setEditLike(){
+        if (editLike.isChecked())
+            return 1;
+        else
+            return 0;
     }
 
 }
