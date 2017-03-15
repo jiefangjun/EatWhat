@@ -17,6 +17,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -35,6 +36,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private FragmentManager fragmentManager;
     private NavigationView navigationView;
     private AllFoodFragment allFoodFragment;
+    private long currentTime;
+    private long lastTime;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,5 +110,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return false;
     }
 
+    @Override
+    public void onBackPressed() {
+        currentTime = System.currentTimeMillis();
+        if(currentTime - lastTime < 2 * 1000){
+            finish();
+        }else {
+            Toast.makeText(this,"再按一次退出程序",Toast.LENGTH_SHORT).show();
+            lastTime = currentTime;
+        }
+    }
 }
 
