@@ -141,7 +141,7 @@ public class AllFoodFragment extends Fragment {
                 }
                 if(data != null)
                 mactivity.replaceFragment(new AddFoodFragment(data.getName(), data.getPrice(),
-                        data.getIntroduce(), data.getBitmap()));
+                        data.getIntroduce(), data.getBitmap(), data.getIsLike()));
             }
         });
     }

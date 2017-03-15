@@ -2,11 +2,15 @@ package gq.fokia.eatwhat;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
@@ -57,6 +61,7 @@ public class AddFoodFragment extends Fragment {
     private Double price;
     private String introduce;
     private Bitmap bitmap;//初始addFoodfragment时传递的bitmap
+    private int like;//传递过来的checkbox的值
 
 
     public static final int TAKE_PHOTO = 1;
@@ -77,20 +82,27 @@ public class AddFoodFragment extends Fragment {
         editSaveData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addFoodsData();
-                Toast.makeText(getContext(),"存储成功",Toast.LENGTH_LONG).show();
+                    addFoodsData();
             }
         });
         return view;
     }
 
     private void addFoodsData(){
+        if(editName.getText().length() == 0 || editPrice.getText().length() == 0){
+            Toast.makeText(getContext(), "至少得输入名字和价格哦", Toast.LENGTH_SHORT).show();
+            return;
+        }else if (bitmap == null){
+            bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.d0);
+        }
         savePicture(bitmap);
+
         ContentValues values = new ContentValues();
         values.put("name", editName.getText().toString());
         values.put("price", editPrice.getText().toString());
         values.put("introduce", editIntroduce.getText().toString());
         values.put("image", absoluteImagePath);
+        values.put("like", setEditLike());
         db.insert("food", null, values);
         String ss = editPrice.getText().toString();
         double price;
@@ -127,12 +139,6 @@ public class AddFoodFragment extends Fragment {
     public Bitmap getBitmap(){
         try {
             BitmapFactory bitmapFactory = new BitmapFactory();
-            /*BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-            options.inJustDecodeBounds = false;
-            options.inSampleSize = 2;
-            bitmap = bitmapFactory.decodeStream(getContext().getContentResolver()
-                    .openInputStream(imageUri), null, options);*/
             bitmap = bitmapFactory.decodeStream(getContext().getContentResolver()
             .openInputStream(imageUri));
         } catch (FileNotFoundException e) {
@@ -140,22 +146,6 @@ public class AddFoodFragment extends Fragment {
         }
         return bitmap;
     }
-
-/*    public void setImage() {
-        try {
-            BitmapFactory bitmapFactory = new BitmapFactory();
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-            options.inJustDecodeBounds = false;
-            options.inSampleSize = 2;
-            bitmapImage = bitmapFactory.decodeStream(getContext().getContentResolver()
-                    .openInputStream(imageUri), null, options);
-            editImage.setImageBitmap(bitmapImage);
-            Log.d(getClass().toString(), "setImage success");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }*/
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
@@ -201,11 +191,12 @@ public class AddFoodFragment extends Fragment {
     }
 
     //传参数的构造函数，用来初始化编辑界面
-    public AddFoodFragment(String name, Double price, String introduce, Bitmap image){
+    public AddFoodFragment(String name, Double price, String introduce, Bitmap image, int like){
         this.name = name;
         this.price = price;
         this.introduce = introduce;
         this.bitmap = image;
+        this.like = like;
     }
 
     //默认无参构造方法
@@ -221,6 +212,7 @@ public class AddFoodFragment extends Fragment {
             editPrice.setText(price+"");
             editIntroduce.setText(introduce);
             editImage.setImageBitmap(bitmap);
+            editLike.setChecked(like == 1);
 
             editSaveData.setOnClickListener(new View.OnClickListener(){
 
@@ -254,6 +246,7 @@ public class AddFoodFragment extends Fragment {
         values.put("price", editPrice.getText().toString());
         values.put("introduce", editIntroduce.getText().toString());
         values.put("image", absoluteImagePath);
+        values.put("like", setEditLike());
         String args[] = {name};
         db.update("food", values, "name=?" , args);
         foodList.clear();
