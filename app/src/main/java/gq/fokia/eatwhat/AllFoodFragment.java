@@ -41,7 +41,7 @@ public class AllFoodFragment extends Fragment {
     private View view;
     private FoodAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private Cursor cursor;
+    public Cursor cursor;//声明public为了子类能够调用
     private Food foodZero;//栈顶food对象
     private MainActivity mactivity;
     @Override
@@ -66,7 +66,7 @@ public class AllFoodFragment extends Fragment {
         return view;
     }
 
-    private void getFoodsData(){
+    public void getFoodsData(){
         int dbSize,i = 0, length;
         dbSize = cursor.getCount();
         if(dbSize == 0){
@@ -90,7 +90,7 @@ public class AllFoodFragment extends Fragment {
             }
     }
 
-    private void getMoreData(){
+    public void getMoreData(){
         int position = cursor.getPosition();
         Log.d("position",position+"");
 //        cursor.moveToPosition(position+1);
