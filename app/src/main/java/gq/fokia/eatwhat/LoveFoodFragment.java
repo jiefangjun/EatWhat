@@ -2,6 +2,7 @@ package gq.fokia.eatwhat;
 
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,24 +15,29 @@ import java.util.List;
  */
 
 public class LoveFoodFragment extends AllFoodFragment {
-    private List<Food> lovefoods = new ArrayList<>();
-    //private List<Food> foodList = new ArrayList<>();
-    /*public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        View view = inflater.inflate()
-    }*/
+    private List<Food> current_foods = new ArrayList<>();
 
     @Override
     public void onStart() {
-        lovefoods = foodList;
         super.onStart();
-        String[] columns = {"like"};
-        String[] where = {"like = 1"};
+        if(foodList.isEmpty()){
+            getFoodsData();
+        }
+        copyList();
         cursor.close();
-        //lovefoods.clear();
-        String queryLike = "SELECT * FROM food WHERE like=1";
-        cursor = db.query("food", columns, "?", where, null, null, null);
-        foodList = lovefoods;
+        foodList.clear();
+        cursor = db.query("food", null, "like = 1", null, null, null, null);
     }
 
+    public void copyList(){
+        for(int i=0; i<foodList.size(); i++){
+            current_foods.add(foodList.get(i));
+        }
+    }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        foodList = current_foods;
+    }
 }

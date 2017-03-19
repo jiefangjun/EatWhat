@@ -24,7 +24,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 
 /**
@@ -185,8 +184,6 @@ public class AllFoodFragment extends Fragment {
                 Log.d("foodZero", foodZero.toString());
         }}, 1200);
     }
-
-
 
 }
 
