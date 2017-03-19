@@ -22,7 +22,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> im
     private List<Food> mFoodList;
     private OnRecyclerViewItemClickListener mOnItemClickListener = null;
 
-    static class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder{
         View foodView;
         ImageView foodImage;
         TextView foodName;

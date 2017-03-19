@@ -38,7 +38,7 @@ public class AllFoodFragment extends Fragment {
     public static RecyclerView recyclerView; //为了Itemcallback可以获得此recvclerview--public
     private Bitmap bitmap;
     private View view;
-    private FoodAdapter adapter;
+    public FoodAdapter adapter;//声明public以便random复制
     private SwipeRefreshLayout swipeRefreshLayout;
     public Cursor cursor;//声明public为了子类能够调用
     private Food foodZero;//栈顶food对象
