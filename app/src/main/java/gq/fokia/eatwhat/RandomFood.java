@@ -1,6 +1,7 @@
 package gq.fokia.eatwhat;
 
 
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -40,18 +41,16 @@ public class RandomFood extends Fragment {
         name = (TextView) view.findViewById(R.id.random_name);
         price = (TextView) view.findViewById(R.id.random_price);
         introduce = (TextView) view.findViewById(R.id.random_introduce);
-        return view;
-    }
-
-    public RandomFood (){
         getRandomFood();
+        return view;
     }
 
     private Food getRandomFood(){
         Random random = new Random();
         cursor = db.query("food", null, null, null, null, null, null, null);
         if(cursor.getCount() == 0){
-            food = new Food("hello", 9999, "nothing",getImage("/res/drawable/d0.jpg"),0);
+            food = new Food("hello", 9999, "nothing",
+                    getImage(getActivity().getResources(), R.drawable.d0),0);
         }else {
             cursor.moveToFirst();
             int first = cursor.getInt(0);
@@ -71,6 +70,16 @@ public class RandomFood extends Fragment {
         try {
             BitmapFactory bitmapFactory = new BitmapFactory();
             bitmap = bitmapFactory.decodeFile(imagePath);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return bitmap;
+    }
+
+    private Bitmap getImage(Resources resource, int id){
+        try{
+            BitmapFactory bitmapFactory = new BitmapFactory();
+            bitmap = bitmapFactory.decodeResource(resource, id);
         }catch (Exception e){
             e.printStackTrace();
         }

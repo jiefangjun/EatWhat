@@ -127,5 +127,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         db = foodDBOpenHelper.getWritableDatabase();
         Log.d("MainActivity", "onStart");
     }
+
 }
 
