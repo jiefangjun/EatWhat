@@ -16,7 +16,8 @@ public class FoodDBOpenHelper extends SQLiteOpenHelper {
             "price real, " +
             "image text, " +
             "introduce text, " +
-            "like text)";
+            "like text" +
+            "recent text)";
     private Context mContext;
     public FoodDBOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory
             factory, int version){

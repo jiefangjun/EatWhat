@@ -12,9 +12,9 @@ import android.widget.Toast;
 import java.io.File;
 import java.util.Collections;
 
-import static gq.fokia.eatwhat.AllFoodFragment.db;
 import static gq.fokia.eatwhat.AllFoodFragment.foodList;
 import static gq.fokia.eatwhat.AllFoodFragment.recyclerView;
+import static gq.fokia.eatwhat.MainActivity.db;
 
 /**
  * Created by fokia on 17-3-11.

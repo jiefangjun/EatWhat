@@ -18,8 +18,7 @@ import android.widget.TextView;
 
 import java.util.Random;
 
-import static gq.fokia.eatwhat.AllFoodFragment.db;
-import static gq.fokia.eatwhat.AllFoodFragment.foodList;
+import static gq.fokia.eatwhat.MainActivity.db;
 
 /**
  * Created by fokia on 17-3-19.
@@ -30,7 +29,6 @@ public class RandomFood extends Fragment {
     private TextView name;
     private TextView price;
     private TextView introduce;
-    private FoodDBOpenHelper foodDBOpenHelper;
     private Cursor cursor;
     private Bitmap bitmap;
     private Food food;
@@ -52,16 +50,20 @@ public class RandomFood extends Fragment {
     private Food getRandomFood(){
         Random random = new Random();
         cursor = db.query("food", null, null, null, null, null, null, null);
-        cursor.moveToFirst();
-        int first = cursor.getInt(0);
-        cursor.moveToLast();
-        int last = cursor.getInt(0);
-        int position = random.nextInt(last - first);
-        cursor.moveToPosition(position);
-        food = new Food(cursor.getString(1),
-                cursor.getDouble(2), cursor.getString(4),
-                getImage(cursor.getString(3)),
-                cursor.getInt(5));
+        if(cursor.getCount() == 0){
+            food = new Food("hello", 9999, "nothing",getImage("/res/drawable/d0.jpg"),0);
+        }else {
+            cursor.moveToFirst();
+            int first = cursor.getInt(0);
+            cursor.moveToLast();
+            int last = cursor.getInt(0);
+            int position = random.nextInt(last - first);
+            cursor.moveToPosition(position);
+            food = new Food(cursor.getString(1),
+                    cursor.getDouble(2), cursor.getString(4),
+                    getImage(cursor.getString(3)),
+                    cursor.getInt(5));
+        }
         return food;
     }
 

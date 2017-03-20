@@ -1,14 +1,10 @@
 package gq.fokia.eatwhat;
 
 
-import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import static gq.fokia.eatwhat.MainActivity.db;
 
 /**
  * Created by fokia on 17-3-15.

@@ -25,6 +25,9 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static gq.fokia.eatwhat.MainActivity.db;
+import static gq.fokia.eatwhat.MainActivity.foodDBOpenHelper;
+
 
 /**
  * Created by fokia on 17-2-21.
@@ -33,8 +36,7 @@ import java.util.List;
 public class AllFoodFragment extends Fragment {
 
     public static List<Food> foodList = new ArrayList<>();
-    private FoodDBOpenHelper foodDBOpenHelper;
-    public static SQLiteDatabase db;
+
     public static RecyclerView recyclerView; //为了Itemcallback可以获得此recvclerview--public
     private Bitmap bitmap;
     private View view;
@@ -148,9 +150,7 @@ public class AllFoodFragment extends Fragment {
     @Override
     public void onStart(){
         super.onStart();
-        foodDBOpenHelper = new FoodDBOpenHelper(getContext(),
-                "FoodClub.db", null, 1);
-        db = foodDBOpenHelper.getWritableDatabase();
+
         cursor = db.query("food", null, null, null, null, null, "id DESC", null);
         final ItemTouchHelper helper = new ItemTouchHelper(new MyCallBack());
         helper.attachToRecyclerView(recyclerView);

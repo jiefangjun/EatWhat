@@ -1,5 +1,6 @@
 package gq.fokia.eatwhat;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,13 +13,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
-
-import gq.fokia.eatwhat.Random.RandomFoodFragment;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
@@ -30,11 +30,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private AllFoodFragment allFoodFragment;
     private long currentTime;
     private long lastTime;
+
+    public static FoodDBOpenHelper foodDBOpenHelper;
+    public static SQLiteDatabase db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initDataBase();
         setContentView(R.layout.activity_main);
-        replaceFragment(new RandomFoodFragment());
+        replaceFragment(new RandomFood());
         mDrawerLayout = (DrawerLayout) findViewById(R.id.root_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         transparentState();
@@ -114,6 +119,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Toast.makeText(this,"再按一次退出程序",Toast.LENGTH_SHORT).show();
             lastTime = currentTime;
         }
+    }
+
+    protected void initDataBase() {
+        foodDBOpenHelper = new FoodDBOpenHelper(getBaseContext(),
+                "FoodClub.db", null, 1);
+        db = foodDBOpenHelper.getWritableDatabase();
+        Log.d("MainActivity", "onStart");
     }
 }
 
