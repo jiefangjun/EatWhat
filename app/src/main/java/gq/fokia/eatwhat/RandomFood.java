@@ -21,6 +21,7 @@ import android.widget.TextView;
 import java.util.Random;
 
 import static gq.fokia.eatwhat.MainActivity.db;
+import static gq.fokia.eatwhat.MainActivity.lastposition;
 
 /**
  * Created by fokia on 17-3-19.
@@ -47,7 +48,7 @@ public class RandomFood extends Fragment {
     }
 
     private Food getRandomFood(){
-        int length;
+        int length, position;
         Random random = new Random();
         cursor = db.query("food", null, null, null, null, null, null, null);
         if(cursor.getCount() == 0){
@@ -63,8 +64,11 @@ public class RandomFood extends Fragment {
             }else{
                 length = last - first;
             }
-            int position = random.nextInt(length);
+            position = random.nextInt(length);
+            if(position == lastposition)
+                position ++;
             cursor.moveToPosition(position);
+            lastposition = position;
             food = new Food(cursor.getString(1),
                     cursor.getDouble(2), cursor.getString(4),
                     getImage(cursor.getString(3)),

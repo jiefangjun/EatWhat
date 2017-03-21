@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public static FoodDBOpenHelper foodDBOpenHelper;
     public static SQLiteDatabase db;
+    public static int lastposition = 0;//上一次随机位置
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
