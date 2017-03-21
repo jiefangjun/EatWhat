@@ -1,7 +1,9 @@
 package gq.fokia.eatwhat;
 
+import android.Manifest;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -17,7 +19,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -66,9 +71,6 @@ public class AddFoodFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.add_food_fragment, container, false);
-        /*foodDBOpenHelper = new FoodDBOpenHelper(getContext(),
-                "FoodClub.db", null, 1);
-        db = foodDBOpenHelper.getWritableDatabase();*/
         editName = (EditText) view.findViewById(R.id.edit_name);
         editPrice = (EditText) view.findViewById(R.id.edit_price);
         editImage = (ImageView) view.findViewById(R.id.edit_image);
@@ -78,7 +80,13 @@ public class AddFoodFragment extends Fragment {
         editSaveData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(ContextCompat.checkSelfPermission
+                        (getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
+                }else {
                     addFoodsData();
+                }
+
             }
         });
         return view;
@@ -224,7 +232,12 @@ public class AddFoodFragment extends Fragment {
         editImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                takePhoto();
+                if(ContextCompat.checkSelfPermission
+                        (getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{ Manifest.permission.CAMERA}, 1);
+                }else {
+                    takePhoto();
+                }
             }
         });
 
@@ -274,4 +287,24 @@ public class AddFoodFragment extends Fragment {
             return 0;
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode){
+            case 1:
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    takePhoto();
+                }else {
+                    Toast.makeText(getContext(), "权限未被授予", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case 2:
+                if(grantResults.length >0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    addFoodsData();
+                }else {
+                    Toast.makeText(getContext(), "权限未被授予", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+        }
+    }
 }
