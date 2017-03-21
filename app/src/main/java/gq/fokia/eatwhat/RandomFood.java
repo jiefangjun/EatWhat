@@ -1,6 +1,7 @@
 package gq.fokia.eatwhat;
 
 
+import android.content.ContentValues;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -46,6 +47,7 @@ public class RandomFood extends Fragment {
     }
 
     private Food getRandomFood(){
+        int length;
         Random random = new Random();
         cursor = db.query("food", null, null, null, null, null, null, null);
         if(cursor.getCount() == 0){
@@ -56,12 +58,21 @@ public class RandomFood extends Fragment {
             int first = cursor.getInt(0);
             cursor.moveToLast();
             int last = cursor.getInt(0);
-            int position = random.nextInt(last - first);
+            if(last == first){
+                length = 1;
+            }else{
+                length = last - first;
+            }
+            int position = random.nextInt(length);
             cursor.moveToPosition(position);
             food = new Food(cursor.getString(1),
                     cursor.getDouble(2), cursor.getString(4),
                     getImage(cursor.getString(3)),
                     cursor.getInt(5));
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("recent", System.currentTimeMillis());
+            String args[] = {cursor.getString(0)};
+            db.update("food", contentValues, "id=?", args);
         }
         return food;
     }

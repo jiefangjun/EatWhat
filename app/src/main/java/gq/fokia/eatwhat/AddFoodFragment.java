@@ -39,6 +39,7 @@ import java.io.IOException;
 
 import static android.app.Activity.RESULT_OK;
 import static gq.fokia.eatwhat.AllFoodFragment.foodList;
+import static gq.fokia.eatwhat.MainActivity.db;
 
 /**
  * Created by fokia on 17-2-23.
@@ -52,8 +53,6 @@ public class AddFoodFragment extends Fragment {
     private ImageView editImage;
     private CheckBox editLike;
     private Button editSaveData;
-    private FoodDBOpenHelper foodDBOpenHelper;
-    private SQLiteDatabase db;
     private Uri imageUri;
     private String absoluteImagePath;
 
@@ -70,9 +69,9 @@ public class AddFoodFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.add_food_fragment, container, false);
-        foodDBOpenHelper = new FoodDBOpenHelper(getContext(),
+        /*foodDBOpenHelper = new FoodDBOpenHelper(getContext(),
                 "FoodClub.db", null, 1);
-        db = foodDBOpenHelper.getWritableDatabase();
+        db = foodDBOpenHelper.getWritableDatabase();*/
         editName = (EditText) view.findViewById(R.id.edit_name);
         editPrice = (EditText) view.findViewById(R.id.edit_price);
         editImage = (ImageView) view.findViewById(R.id.edit_image);
