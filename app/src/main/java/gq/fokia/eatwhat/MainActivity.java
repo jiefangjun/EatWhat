@@ -103,6 +103,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_like:
                 replaceFragment(new LoveFoodFragment());
                 navigationView.setCheckedItem(R.id.nav_like);
+                break;
+            case R.id.nav_recent:
+                replaceFragment(new RecentFood());
+                navigationView.setCheckedItem(R.id.nav_recent);
+                break;
             default:
                 break;
         }
