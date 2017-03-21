@@ -117,6 +117,7 @@ public class AddFoodFragment extends Fragment {
         foodList.add(0, new Food(editName.getText().toString(), price,
                 editIntroduce.getText().toString(),
                 bitmap, setEditLike()));
+        Toast.makeText(getContext(),"添加成功",Toast.LENGTH_SHORT).show();
     }
 
     private void takePhoto(){
@@ -232,12 +233,7 @@ public class AddFoodFragment extends Fragment {
         editImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(ContextCompat.checkSelfPermission
-                        (getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
-                    ActivityCompat.requestPermissions(getActivity(), new String[]{ Manifest.permission.CAMERA}, 1);
-                }else {
-                    takePhoto();
-                }
+                takePhoto();
             }
         });
 
@@ -290,13 +286,6 @@ public class AddFoodFragment extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode){
-            case 1:
-                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    takePhoto();
-                }else {
-                    Toast.makeText(getContext(), "权限未被授予", Toast.LENGTH_SHORT).show();
-                }
-                break;
             case 2:
                 if(grantResults.length >0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     addFoodsData();

@@ -109,4 +109,11 @@ public class RandomFood extends Fragment {
         price.setText(food.getPrice()+"");
         introduce.setText(food.getIntroduce());
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d("RandomFood","onDestroy");
+        bitmap.recycle();
+    }
 }

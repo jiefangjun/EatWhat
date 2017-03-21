@@ -33,12 +33,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private FragmentManager fragmentManager;
     private NavigationView navigationView;
     private AllFoodFragment allFoodFragment;
+    private RecentFood recentFood;
     private long currentTime;
     private long lastTime;
 
     public static FoodDBOpenHelper foodDBOpenHelper;
     public static SQLiteDatabase db;
-    public static int lastposition = 0;//上一次随机位置
+    public static int lastposition = 999;//初始化数据是给定一个值，避免只有一个数据时出错，上一次随机位置
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,7 +117,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 navigationView.setCheckedItem(R.id.nav_like);
                 break;
             case R.id.nav_recent:
-                replaceFragment(new RecentFood());
+                if(recentFood == null){
+                    recentFood = new RecentFood();
+                }
+                replaceFragment(recentFood);
                 navigationView.setCheckedItem(R.id.nav_recent);
                 break;
             default:
