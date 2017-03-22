@@ -131,7 +131,7 @@ public class AddFoodFragment extends Fragment {
             e.printStackTrace();
         }
         if(Build.VERSION.SDK_INT >= 24){
-            imageUri = FileProvider.getUriForFile(getContext(), "gq.eatwhat.fileprovider", outputImage);
+            imageUri = FileProvider.getUriForFile(getContext(), "gq.fokia.eatwhat.fileprovider", outputImage);
         }else {
             imageUri = Uri.fromFile(outputImage);
         }
