@@ -296,4 +296,10 @@ public class AddFoodFragment extends Fragment {
             default:
         }
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        bitmap.recycle();
+    }
 }
