@@ -7,7 +7,6 @@
 
 
     <ImageView
-        android:adjustViewBounds="true"
         android:layout_width="match_parent"
         android:layout_height="300dp"
         app:srcCompat="@color/cardview_shadow_start_color"

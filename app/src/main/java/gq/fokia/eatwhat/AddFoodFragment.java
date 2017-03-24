@@ -157,7 +157,7 @@ public class AddFoodFragment extends Fragment {
         switch (requestCode){
             case TAKE_PHOTO:
                 if(resultCode == RESULT_OK){
-                    cutPhoto(4,3,600,450,imageUri,TAKE_CUT);
+                    cutPhoto(4,3,600,500,imageUri,TAKE_CUT);
                 }
                 break;
             case TAKE_CUT:
@@ -268,6 +268,7 @@ public class AddFoodFragment extends Fragment {
         // 裁剪后输出图片的尺寸大小
         in.putExtra("outputX", outputX);
         in.putExtra("outputY", outputY);
+        //是否保留比例
         in.putExtra("scale", true);
         in.putExtra(MediaStore.EXTRA_OUTPUT, uri);
         in.putExtra("return-data", false);
@@ -295,11 +296,5 @@ public class AddFoodFragment extends Fragment {
                 break;
             default:
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        bitmap.recycle();
     }
 }
