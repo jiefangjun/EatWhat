@@ -39,4 +39,8 @@ public class Food {
         return isLike;
     }
 
+    public void setIsLike(int like){
+        isLike = like;
+    }
+
 }

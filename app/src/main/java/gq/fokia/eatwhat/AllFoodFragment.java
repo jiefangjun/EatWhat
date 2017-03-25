@@ -40,11 +40,12 @@ public class AllFoodFragment extends Fragment {
     public static RecyclerView recyclerView; //为了Itemcallback可以获得此recvclerview--public
     private Bitmap bitmap;
     private View view;
-    public FoodAdapter adapter;//声明public以便random复制
+    public static FoodAdapter adapter;//声明public以便random复制
     private SwipeRefreshLayout swipeRefreshLayout;
     public Cursor cursor;//声明public为了子类能够调用
     private Food foodZero;//栈顶food对象
     private MainActivity mactivity;
+    public static ItemTouchHelper helper;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         view = inflater.inflate(R.layout.allfood_fragment, container, false);
@@ -63,7 +64,6 @@ public class AllFoodFragment extends Fragment {
         });
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        Log.d(getClass().toString(), "onCreateView Executed");
         return view;
     }
 
@@ -94,7 +94,6 @@ public class AllFoodFragment extends Fragment {
     public void getMoreData(){
         int position = cursor.getPosition();
         Log.d("position",position+"");
-//        cursor.moveToPosition(position+1);
         int i = 0;
         Log.d("isAfterLast",cursor.isAfterLast()+"");
         while (i < 5 && !cursor.isAfterLast()){
@@ -108,11 +107,6 @@ public class AllFoodFragment extends Fragment {
     private Bitmap getImage(String imagePath){
         try {
             BitmapFactory bitmapFactory = new BitmapFactory();
-            /*BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-            options.inJustDecodeBounds = false;
-            options.inSampleSize = 1;
-            bitmap = bitmapFactory.decodeFile(imagePath);*/
             bitmap = bitmapFactory.decodeFile(imagePath);
         }catch (Exception e){
             e.printStackTrace();
@@ -150,9 +144,8 @@ public class AllFoodFragment extends Fragment {
     @Override
     public void onStart(){
         super.onStart();
-
         cursor = db.query("food", null, null, null, null, null, "id DESC", null);
-        final ItemTouchHelper helper = new ItemTouchHelper(new MyCallBack());
+        helper = new ItemTouchHelper(new MyCallBack());
         helper.attachToRecyclerView(recyclerView);
     }
     public void refreshFragment() {

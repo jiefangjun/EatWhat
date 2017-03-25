@@ -58,7 +58,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> im
         holder.foodImage.setImageBitmap(food.getBitmap());
         holder.foodName.setText(food.getName());
         holder.foodPrice.setText(food.getPrice()+"");
-        holder.foodLike.setChecked(food.getIsLike() != 0);
+        holder.foodLike.setChecked(food.getIsLike() == 1);
         holder.itemView.setTag(food);
     }
 
