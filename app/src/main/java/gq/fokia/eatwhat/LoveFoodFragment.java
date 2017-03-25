@@ -25,10 +25,7 @@ public class LoveFoodFragment extends AllFoodFragment {
         cursor.close();
         foodList.clear();
         cursor = db.query("food", null, "like = 1", null, null, null, null);
-        /*final ItemTouchHelper helper = new ItemTouchHelper(new LoveCallBack());*/
-        /*if(helper != null){
-            helper.onChildViewDetachedFromWindow(recyclerView);
-        }*/
+        //取消recycleview上已经关联的helper
         helper.attachToRecyclerView(null);
         helper = new ItemTouchHelper(new LoveCallBack());
         helper.attachToRecyclerView(recyclerView);
