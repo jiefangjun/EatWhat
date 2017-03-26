@@ -240,11 +240,6 @@ public class AddFoodFragment extends Fragment {
     }
 
     private void updateData(String name){
-        /*if(imageUri == null){
-            String path = Environment.getExternalStorageDirectory().toString() + "/EatWhat/" + editName.toString() + ".jpg";
-            imageUri = Uri.parse(path);
-        }
-        //setImage();*/
         savePicture(bitmap);
         ContentValues values = new ContentValues();
         values.put("name", editName.getText().toString());
