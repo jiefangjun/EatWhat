@@ -25,7 +25,6 @@ public class LoveCallBack extends MyCallBack {
         db.update("food", contentValues, "name=?", args);
         recyclerView.getAdapter().notifyItemRemoved(position);
         foodList.remove(position);
-        //Todo 全部里获得新的数据
-        foodList.clear();
+        //Todo 通知，通知，数据变动
     }
 }
