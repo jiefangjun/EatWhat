@@ -42,7 +42,7 @@ public class AllFoodFragment extends Fragment {
     private Bitmap bitmap;
     private View view;
     public static FoodAdapter adapter;//声明public以便random复制
-    private SwipeRefreshLayout swipeRefreshLayout;
+    public SwipeRefreshLayout swipeRefreshLayout;
     public Cursor cursor;//声明public为了子类能够调用
     private Food foodZero;//栈顶food对象
     private MainActivity mactivity;

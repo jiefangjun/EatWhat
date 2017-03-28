@@ -63,6 +63,7 @@ public class AddFoodFragment extends Fragment {
     private String introduce;
     private Bitmap bitmap;//初始addFoodfragment时传递的bitmap
     private int like;//传递过来的checkbox的值
+    private Bitmap originBitmap;//修改数据时已经存在的bitmap
 
 
     public static final int TAKE_PHOTO = 1;
@@ -100,7 +101,6 @@ public class AddFoodFragment extends Fragment {
             bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.d0);
         }
         savePicture(bitmap);
-
         ContentValues values = new ContentValues();
         values.put("name", editName.getText().toString());
         values.put("price", editPrice.getText().toString());
@@ -229,6 +229,7 @@ public class AddFoodFragment extends Fragment {
 
         }else if(bitmap != null){
             editImage.setImageBitmap(bitmap);
+            //originBitmap = bitmap;
         }
         editImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -240,7 +241,9 @@ public class AddFoodFragment extends Fragment {
     }
 
     private void updateData(String name){
+        //if(bitmap != originBitmap)
         savePicture(bitmap);
+        //savePicture(originBitmap);
         ContentValues values = new ContentValues();
         values.put("name", editName.getText().toString());
         values.put("price", editPrice.getText().toString());
@@ -250,6 +253,7 @@ public class AddFoodFragment extends Fragment {
         String args[] = {name};
         db.update("food", values, "name=?" , args);
         foodList.clear();
+        Toast.makeText(getContext(),"数据更新成功",Toast.LENGTH_SHORT).show();
     }
 
     private void cutPhoto(int aspectX,int aspectY,int outputX,int outputY,Uri uri,int requestCode) {

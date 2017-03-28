@@ -48,27 +48,12 @@ public class RandomFood extends Fragment {
     }
 
     private Food getRandomFood(){
-        int length, position;
-        Random random = new Random();
         cursor = db.query("food", null, null, null, null, null, null, null);
         if(cursor.getCount() == 0){
             food = new Food("hello", 9999, "nothing",
                     getImage(getActivity().getResources(), R.drawable.d0),0);
         }else {
-            cursor.moveToFirst();
-            int first = cursor.getInt(0);
-            cursor.moveToLast();
-            int last = cursor.getInt(0);
-            if(last == first){
-                length = 1;
-            }else{
-                length = last - first;
-            }
-            position = random.nextInt(length);
-            if(position == lastposition)
-                position ++;
-            cursor.moveToPosition(position);
-            lastposition = position;
+            getRandom();
             food = new Food(cursor.getString(1),
                     cursor.getDouble(2), cursor.getString(4),
                     getImage(cursor.getString(3)),
@@ -99,6 +84,29 @@ public class RandomFood extends Fragment {
             e.printStackTrace();
         }
         return bitmap;
+    }
+
+    private void getRandom(){
+        int length, position;
+        Random random = new Random();
+        cursor.moveToFirst();
+        int first = cursor.getInt(0);
+        cursor.moveToLast();
+        int last = cursor.getInt(0);
+        if(last == first){
+            length = 1;
+        }else{
+            length = last - first;
+        }
+        do {
+            position = random.nextInt(length);
+            if(cursor.moveToPosition(position)){
+                cursor.moveToPosition(position);
+                lastposition = position;
+                break;
+            }
+        }
+        while (position != lastposition);
     }
 
     @Override

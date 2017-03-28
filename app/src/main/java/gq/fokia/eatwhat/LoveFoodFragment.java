@@ -13,7 +13,7 @@ import static gq.fokia.eatwhat.MainActivity.db;
  */
 
 public class LoveFoodFragment extends AllFoodFragment {
-    private List<Food> current_foods = new ArrayList<>();
+    private static List<Food> current_foods = new ArrayList<>();
 
     @Override
     public void onStart() {
@@ -21,7 +21,9 @@ public class LoveFoodFragment extends AllFoodFragment {
         if(foodList.isEmpty()){
             getFoodsData();
         }
-        copyList();
+        if(current_foods.isEmpty()){
+            copyList();
+        }
         cursor.close();
         foodList.clear();
         cursor = db.query("food", null, "like = 1", null, null, null, null);

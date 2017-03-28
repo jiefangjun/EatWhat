@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private NavigationView navigationView;
     private AllFoodFragment allFoodFragment;
     private RecentFood recentFood;
+    private LoveFoodFragment loveFoodFragment;
     private long currentTime;
     private long lastTime;
 
@@ -113,11 +114,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 navigationView.setCheckedItem(R.id.nav_add);
                 break;
             case R.id.nav_like:
-                replaceFragment(new LoveFoodFragment());
+                if(loveFoodFragment == null){
+                    loveFoodFragment = new LoveFoodFragment();
+                }
+                replaceFragment(loveFoodFragment);
                 navigationView.setCheckedItem(R.id.nav_like);
                 break;
             case R.id.nav_recent:
-                if(recentFood == null){
+                if (recentFood == null){
                     recentFood = new RecentFood();
                 }
                 replaceFragment(recentFood);

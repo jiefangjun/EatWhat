@@ -1,7 +1,5 @@
 package gq.fokia.eatwhat;
 
-import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,14 +10,16 @@ import static gq.fokia.eatwhat.MainActivity.db;
  */
 
 public class RecentFood extends AllFoodFragment {
-    private List<Food> recentFoods = new ArrayList<>();
+    private static List<Food> recentFoods = new ArrayList<>();
     @Override
     public void onStart() {
         super.onStart();
         if(foodList.isEmpty()){
             getFoodsData();
         }
-        copyList();
+        if(recentFoods.isEmpty()){
+            copyList();
+        }
         cursor.close();
         foodList.clear();
         cursor = db.query("food", null, "recent LIKE '%'", null, null, null, "recent DESC");
@@ -30,6 +30,17 @@ public class RecentFood extends AllFoodFragment {
             recentFoods.add(foodList.get(i));
         }
     }
+
+/*    @Override
+    public void refreshFragment() {
+        swipeRefreshLayout.setRefreshing(true);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        }, 1000);
+    }*/
 
     @Override
     public void onDestroy() {
