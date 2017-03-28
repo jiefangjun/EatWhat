@@ -9,22 +9,19 @@ import static gq.fokia.eatwhat.AllFoodFragment.recyclerView;
 import static gq.fokia.eatwhat.MainActivity.db;
 
 /**
- * Created by fokia on 17-3-24.
+ * Created by fokia on 17-3-28.
  */
 
-public class LoveCallBack extends MyCallBack {
-    public static String disLike;
+public class RecentCallBack extends MyCallBack {
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-        Log.d("LoveCallBack", getClass().toString());
+        Log.d("RecentCallBack", getClass().toString());
         int position = viewHolder.getAdapterPosition();
-        //设置此food为不喜欢，将数据写入数据库，实现持久化
-        //foodList.get(position).setIsLike(0);
+        //此food的recent属性清零，将数据写入数据库，实现持久化
         ContentValues contentValues = new ContentValues();
-        contentValues.put("like", 0);
+        contentValues.put("recent", 0);
         String[] args = {foodList.get(position).getName()};
         db.update("food", contentValues, "name=?", args);
-        disLike = foodList.get(position).getName();
         foodList.remove(position);
         recyclerView.getAdapter().notifyItemRemoved(position);
     }

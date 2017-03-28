@@ -1,5 +1,7 @@
 package gq.fokia.eatwhat;
 
+import android.support.v7.widget.helper.ItemTouchHelper;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +25,9 @@ public class RecentFood extends AllFoodFragment {
         cursor.close();
         foodList.clear();
         cursor = db.query("food", null, "recent LIKE '%'", null, null, null, "recent DESC");
+        helper.attachToRecyclerView(null);
+        helper = new ItemTouchHelper(new RecentCallBack());
+        helper.attachToRecyclerView(recyclerView);
     }
 
     public void copyList(){
@@ -30,18 +35,6 @@ public class RecentFood extends AllFoodFragment {
             recentFoods.add(foodList.get(i));
         }
     }
-
-/*    @Override
-    public void refreshFragment() {
-        swipeRefreshLayout.setRefreshing(true);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        }, 1000);
-    }*/
-
     @Override
     public void onDestroy() {
         super.onDestroy();
