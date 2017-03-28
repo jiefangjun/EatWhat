@@ -25,6 +25,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static gq.fokia.eatwhat.LoveCallBack.disLike;
 import static gq.fokia.eatwhat.MainActivity.db;
 import static gq.fokia.eatwhat.MainActivity.foodDBOpenHelper;
 
@@ -46,6 +47,7 @@ public class AllFoodFragment extends Fragment {
     private Food foodZero;//栈顶food对象
     private MainActivity mactivity;
     public static ItemTouchHelper helper;
+    private int p = 999;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         view = inflater.inflate(R.layout.allfood_fragment, container, false);
@@ -119,14 +121,13 @@ public class AllFoodFragment extends Fragment {
         super.onResume();
         if(foodList.isEmpty()) {
             getFoodsData();
-        }if (!foodList.isEmpty()){
+        }
+        if (!foodList.isEmpty()){
             adapter = new FoodAdapter(foodList);
+            traversal();
             refreshFragment();
             recyclerView.setAdapter(adapter);
-
-        }/*else {
-            //Toast.makeText(getContext(), "什么也没有哦", Toast.LENGTH_LONG).show();
-        }*/
+        }
         if(adapter != null)
         adapter.setOnItemClickListener(new FoodAdapter.OnRecyclerViewItemClickListener() {
             @Override
@@ -149,7 +150,6 @@ public class AllFoodFragment extends Fragment {
         helper.attachToRecyclerView(recyclerView);
     }
     public void refreshFragment() {
-
         // 开始刷新，设置当前为刷新状态
         swipeRefreshLayout.setRefreshing(true);
         // 获取数据
@@ -157,10 +157,12 @@ public class AllFoodFragment extends Fragment {
             @Override
             public void run() {
                 if(foodList.get(0) != foodZero && foodZero != null){
+                    //添加过数据之后，foodList顶端元素发生了变化
                     adapter.notifyDataSetChanged();
                     // 加载完数据设置为不刷新状态，将下拉进度收起来
                     swipeRefreshLayout.setRefreshing(false);
                 }else if(foodZero == foodList.get(0)){
+                    //foodList没有新添加的元素，尝试从数据库中加载更多元素
                     Log.d("db.size",cursor.getCount()+"");
                     if(cursor.getCount() <= 5 || cursor.getPosition() == cursor.getCount()){
                         swipeRefreshLayout.setRefreshing(false);
@@ -176,7 +178,29 @@ public class AllFoodFragment extends Fragment {
                 foodZero = foodList.get(0);
                 Log.d("foodZero", foodZero.toString());
         }}, 1200);
+        traversal();
     }
 
+    private void traversal(){
+        if(disLike != null){
+            for (int i = 0; i < foodList.size(); i++){
+                if (disLike.equals(foodList.get(i).getName())){
+                    p = i;
+                    foodList.get(p).setIsLike(0);
+                    break;
+                }
+            }
+        }
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //还原数据
+        if(p != 999){
+            foodList.get(p).setIsLike(1);
+        }
+    }
 }
 

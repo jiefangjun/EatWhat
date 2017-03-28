@@ -13,6 +13,7 @@ import static gq.fokia.eatwhat.MainActivity.db;
  */
 
 public class LoveCallBack extends MyCallBack {
+    public static String disLike;
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
         Log.d("LoveCallBack", getClass().toString());
@@ -23,8 +24,9 @@ public class LoveCallBack extends MyCallBack {
         contentValues.put("like", 0);
         String[] args = {foodList.get(position).getName()};
         db.update("food", contentValues, "name=?", args);
-        recyclerView.getAdapter().notifyItemRemoved(position);
-        foodList.remove(position);
         //Todo 通知，通知，数据变动
+        disLike = foodList.get(position).getName();
+        foodList.remove(position);
+        recyclerView.getAdapter().notifyItemRemoved(position);
     }
 }
