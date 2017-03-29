@@ -229,8 +229,9 @@ public class AddFoodFragment extends Fragment {
 
         }else if(bitmap != null){
             editImage.setImageBitmap(bitmap);
-            //originBitmap = bitmap;
         }
+        //存储初始bitmap
+        originBitmap = bitmap;
         editImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -241,9 +242,10 @@ public class AddFoodFragment extends Fragment {
     }
 
     private void updateData(String name){
-        //if(bitmap != originBitmap)
+        if(bitmap != originBitmap){
+            bitmap = originBitmap;
+        }
         savePicture(bitmap);
-        //savePicture(originBitmap);
         ContentValues values = new ContentValues();
         values.put("name", editName.getText().toString());
         values.put("price", editPrice.getText().toString());

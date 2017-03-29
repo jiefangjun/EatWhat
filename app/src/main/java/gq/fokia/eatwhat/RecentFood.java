@@ -19,9 +19,7 @@ public class RecentFood extends AllFoodFragment {
         if(foodList.isEmpty()){
             getFoodsData();
         }
-        if(recentFoods.isEmpty()){
-            copyList();
-        }
+        copyList(foodList, recentFoods);
         cursor.close();
         foodList.clear();
         cursor = db.query("food", null, "recent LIKE '%'", null, null, null, "recent DESC");
@@ -30,14 +28,15 @@ public class RecentFood extends AllFoodFragment {
         helper.attachToRecyclerView(recyclerView);
     }
 
-    public void copyList(){
-        for(int i=0; i<foodList.size(); i++){
-            recentFoods.add(foodList.get(i));
+    public void copyList(List<Food> originList, List<Food> targetList){
+        targetList.clear();
+        for (int i = 0; i < originList.size(); i++) {
+            targetList.add(originList.get(i));
         }
     }
     @Override
     public void onDestroy() {
         super.onDestroy();
-        foodList = recentFoods;
+        copyList(recentFoods, foodList);
     }
 }

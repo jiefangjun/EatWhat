@@ -18,16 +18,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static gq.fokia.eatwhat.LoveCallBack.disLike;
 import static gq.fokia.eatwhat.MainActivity.db;
-import static gq.fokia.eatwhat.MainActivity.foodDBOpenHelper;
 
 
 /**
@@ -44,7 +39,7 @@ public class AllFoodFragment extends Fragment {
     public static FoodAdapter adapter;//声明public以便random复制
     public SwipeRefreshLayout swipeRefreshLayout;
     public Cursor cursor;//声明public为了子类能够调用
-    private Food foodZero;//栈顶food对象
+    public static Food foodZero;//栈顶food对象
     private MainActivity mactivity;
     public static ItemTouchHelper helper;
     private int p = 999;
@@ -160,6 +155,7 @@ public class AllFoodFragment extends Fragment {
                     //添加过数据之后，foodList顶端元素发生了变化
                     adapter.notifyDataSetChanged();
                     // 加载完数据设置为不刷新状态，将下拉进度收起来
+                    Log.d("refresh","变化？？？");
                     swipeRefreshLayout.setRefreshing(false);
                 }else if(foodZero == foodList.get(0)){
                     //foodList没有新添加的元素，尝试从数据库中加载更多元素
@@ -173,6 +169,7 @@ public class AllFoodFragment extends Fragment {
                     adapter.notifyDataSetChanged();
                     swipeRefreshLayout.setRefreshing(false);
                 }else if(foodZero == null){
+                    Log.d("refresh","看看");
                     swipeRefreshLayout.setRefreshing(false);
                 }
                 foodZero = foodList.get(0);
@@ -191,6 +188,8 @@ public class AllFoodFragment extends Fragment {
                 }
             }
         }
+        //添加return否则影响回调
+        return;
     }
 
 

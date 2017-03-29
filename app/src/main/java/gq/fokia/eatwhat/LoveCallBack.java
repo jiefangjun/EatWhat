@@ -1,8 +1,10 @@
 package gq.fokia.eatwhat;
 
 import android.content.ContentValues;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.Toast;
 
 import static gq.fokia.eatwhat.AllFoodFragment.foodList;
 import static gq.fokia.eatwhat.AllFoodFragment.recyclerView;
@@ -27,5 +29,6 @@ public class LoveCallBack extends MyCallBack {
         disLike = foodList.get(position).getName();
         foodList.remove(position);
         recyclerView.getAdapter().notifyItemRemoved(position);
+        Snackbar.make(viewHolder.itemView, "已从喜欢列表移除", Snackbar.LENGTH_SHORT).show();
     }
 }
