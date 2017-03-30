@@ -192,6 +192,13 @@ public class AllFoodFragment extends Fragment {
         return;
     }
 
+    public void copyList(List<Food> originList, List<Food> targetList){
+        targetList.clear();
+        for (int i = 0; i < originList.size(); i++) {
+            targetList.add(originList.get(i));
+        }
+    }
+
 
     @Override
     public void onDestroy() {
