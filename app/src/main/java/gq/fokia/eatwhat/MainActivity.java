@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }else {
             replaceFragment(new RandomFood());
         }
-        //replaceFragment(new RandomFood());
         mDrawerLayout = (DrawerLayout) findViewById(R.id.root_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         transparentState();

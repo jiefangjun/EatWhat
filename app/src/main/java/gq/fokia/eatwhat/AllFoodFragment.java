@@ -36,7 +36,7 @@ public class AllFoodFragment extends Fragment {
     public static RecyclerView recyclerView; //为了Itemcallback可以获得此recvclerview--public
     private Bitmap bitmap;
     private View view;
-    public static FoodAdapter adapter;//声明public以便random复制
+    public FoodAdapter adapter;//声明public以便random复制
     public SwipeRefreshLayout swipeRefreshLayout;
     public Cursor cursor;//声明public为了子类能够调用
     public static Food foodZero;//栈顶food对象
@@ -119,7 +119,7 @@ public class AllFoodFragment extends Fragment {
         }
         if (!foodList.isEmpty()){
             adapter = new FoodAdapter(foodList);
-            traversal();
+
             refreshFragment();
             recyclerView.setAdapter(adapter);
         }
@@ -130,11 +130,14 @@ public class AllFoodFragment extends Fragment {
                 if (mactivity == null){
                     mactivity = (MainActivity) getActivity();
                 }
-                if(data != null)
-                mactivity.replaceFragment(new AddFoodFragment(data.getName(), data.getPrice(),
-                        data.getIntroduce(), data.getBitmap(), data.getIsLike()));
+                if(data != null){
+                    mactivity.replaceFragment(new AddFoodFragment(data.getName(), data.getPrice(),
+                            data.getIntroduce(), data.getBitmap(), data.getIsLike()));
+                }
             }
         });
+        //traversal();
+        //TODO 修复fragment重复
     }
 
     @Override
@@ -175,7 +178,8 @@ public class AllFoodFragment extends Fragment {
                 foodZero = foodList.get(0);
                 Log.d("foodZero", foodZero.toString());
         }}, 1200);
-        traversal();
+        //traversal();
+        //TODO 修复数据更新
     }
 
     private void traversal(){
@@ -204,9 +208,9 @@ public class AllFoodFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         //还原数据
-        if(p != 999){
+        /*if(p != 999){
             foodList.get(p).setIsLike(1);
-        }
+        }*/
     }
 }
 

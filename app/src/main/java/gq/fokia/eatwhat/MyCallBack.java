@@ -2,11 +2,13 @@ package gq.fokia.eatwhat;
 
 import android.content.Context;
 import android.os.Environment;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import java.io.File;
@@ -78,6 +80,12 @@ public class MyCallBack extends ItemTouchHelper.Callback {
         File file = new File(picturePath, food.getName()+".jpg");
         file.delete();
     }
+
+    public void showSnackBar(View view, String sentence, int duration){
+        Snackbar snackbar = Snackbar.make(view, sentence, duration);
+        //TODO 添加snackbar
+    }
+
 
     //选中放大viewHolder
     @Override
