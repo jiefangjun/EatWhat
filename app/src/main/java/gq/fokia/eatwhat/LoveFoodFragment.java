@@ -14,7 +14,7 @@ import static gq.fokia.eatwhat.MainActivity.db;
  */
 
 public class LoveFoodFragment extends AllFoodFragment {
-    private static List<Food> current_foods = new ArrayList<>();
+    public static List<Food> current_foods = new ArrayList<>();
 
     @Override
     public void onStart() {

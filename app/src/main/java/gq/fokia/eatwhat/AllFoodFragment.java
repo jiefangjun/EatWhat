@@ -42,7 +42,6 @@ public class AllFoodFragment extends Fragment {
     public static Food foodZero;//栈顶food对象
     private MainActivity mactivity;
     public static ItemTouchHelper helper;
-    private int p = 999;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         view = inflater.inflate(R.layout.allfood_fragment, container, false);
@@ -119,7 +118,6 @@ public class AllFoodFragment extends Fragment {
         }
         if (!foodList.isEmpty()){
             adapter = new FoodAdapter(foodList);
-
             refreshFragment();
             recyclerView.setAdapter(adapter);
         }
@@ -136,7 +134,6 @@ public class AllFoodFragment extends Fragment {
                 }
             }
         });
-        //traversal();
         //TODO 修复fragment重复
     }
 
@@ -178,23 +175,10 @@ public class AllFoodFragment extends Fragment {
                 foodZero = foodList.get(0);
                 Log.d("foodZero", foodZero.toString());
         }}, 1200);
-        //traversal();
         //TODO 修复数据更新
     }
 
-    private void traversal(){
-        if(disLike != null){
-            for (int i = 0; i < foodList.size(); i++){
-                if (disLike.equals(foodList.get(i).getName())){
-                    p = i;
-                    foodList.get(p).setIsLike(0);
-                    break;
-                }
-            }
-        }
-        //添加return否则影响回调
-        return;
-    }
+
 
     public void copyList(List<Food> originList, List<Food> targetList){
         targetList.clear();
@@ -203,14 +187,5 @@ public class AllFoodFragment extends Fragment {
         }
     }
 
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        //还原数据
-        /*if(p != 999){
-            foodList.get(p).setIsLike(1);
-        }*/
-    }
 }
 
