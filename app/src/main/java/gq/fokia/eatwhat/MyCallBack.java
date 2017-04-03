@@ -1,5 +1,6 @@
 package gq.fokia.eatwhat;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.os.Environment;
 import android.support.design.widget.Snackbar;
@@ -65,9 +66,9 @@ public class MyCallBack extends ItemTouchHelper.Callback {
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-        int position = viewHolder.getAdapterPosition();
+        final int position = viewHolder.getAdapterPosition();
         recyclerView.getAdapter().notifyItemRemoved(position);
-        Food food = foodList.get(position);
+        final Food food = foodList.get(position);
         Log.d("position food name", food.getName());
         db.delete("food", "name=?", new String[]{food.getName()});
         foodList.remove(position);
@@ -79,11 +80,30 @@ public class MyCallBack extends ItemTouchHelper.Callback {
         }
         File file = new File(picturePath, food.getName()+".jpg");
         file.delete();
+        showSnackBar(viewHolder, "已删除", food, position);
     }
 
-    public void showSnackBar(View view, String sentence, int duration){
-        Snackbar snackbar = Snackbar.make(view, sentence, duration);
-        //TODO 添加snackbar
+    public void showSnackBar(final RecyclerView.ViewHolder view, String sentence, final Food food, final int position){
+        Snackbar snackbar = Snackbar.make(view.itemView, sentence, Snackbar.LENGTH_SHORT);
+        snackbar.setAction("撤销", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                foodList.add(position, food);
+                ContentValues values = new ContentValues();
+                String path = Environment.getExternalStorageDirectory().toString() + "/EatWhat/" +
+                        food.getName() + ".jpg";
+                Log.d("callBack_path",path);
+                values.put("name", food.getName());
+                values.put("price", food.getPrice());
+                values.put("introduce",food.getIntroduce());
+                values.put("image", path);
+                //TODO savepicture
+                values.put("like", food.getIsLike());
+                db.insert("food", null, values);
+                recyclerView.getAdapter().notifyDataSetChanged();
+            }
+        });
+        snackbar.show();
     }
 
 
