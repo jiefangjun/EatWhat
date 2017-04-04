@@ -248,6 +248,8 @@ public class AddFoodFragment extends Fragment {
             bitmap = originBitmap;
         }
         absoluteImagePath = savePicture(bitmap, editName.getText().toString());
+        File file = new File(Environment.getExternalStorageDirectory().toString() + "/EatWhat/" + name + ".jpg");
+        file.delete();
         ContentValues values = new ContentValues();
         values.put("name", editName.getText().toString());
         values.put("price", editPrice.getText().toString());
