@@ -98,15 +98,31 @@ public class RandomFood extends Fragment {
         }else{
             length = last - first;
         }
-        do {
-            position = random.nextInt(length);
-            if(cursor.moveToPosition(position)){
+        position = random.nextInt(length);
+        if(position != lastposition){
+            if(cursor.moveToPosition(position))
                 cursor.moveToPosition(position);
                 lastposition = position;
-                break;
+        }else {
+            while (position == lastposition){
+                if(position == 0){
+                    position = length - position;
+                    if(cursor.moveToPosition(position)){
+                        cursor.moveToPosition(position);
+                        lastposition = position;
+                        break;
+                    }
+                }else
+                position = random.nextInt(length) / 2;
+                if(position != lastposition){
+                    if(cursor.moveToPosition(position)){
+                        cursor.moveToPosition(position);
+                        lastposition = position;
+                        break;
+                    }
+                }
             }
         }
-        while (position != lastposition);
     }
 
     @Override

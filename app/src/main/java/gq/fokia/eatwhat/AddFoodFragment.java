@@ -101,7 +101,7 @@ public class AddFoodFragment extends Fragment {
         }else if (bitmap == null){
             bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.d0);
         }
-        savePicture(bitmap);
+        absoluteImagePath = savePicture(bitmap, editName.getText().toString());
         ContentValues values = new ContentValues();
         values.put("name", editName.getText().toString());
         values.put("price", editPrice.getText().toString());
@@ -173,16 +173,16 @@ public class AddFoodFragment extends Fragment {
 
 
 
-    public void savePicture(Bitmap bitmap) {
-        String picturePath = Environment.getExternalStorageDirectory().toString() + "/EatWhat/";
-        Log.d(getClass().toString(), picturePath);
-        File dir = new File(picturePath);
+    public static String savePicture(Bitmap bitmap, String edit_name) {
+        String picturePath = Environment.getExternalStorageDirectory().toString() + "/EatWhat/"
+                 + edit_name + ".jpg";
+        File dir = new File(Environment.getExternalStorageDirectory().toString() + "/EatWhat/");
         if (!dir.exists()){
             dir.mkdirs();
         }
-        File file = new File(picturePath, editName.getText().toString()+".jpg");
-        absoluteImagePath = picturePath + editName.getText().toString()+ ".jpg";
-        Log.d("absoluteImagePath", absoluteImagePath);
+        File file = new File(Environment.getExternalStorageDirectory().toString() + "/EatWhat/", edit_name + ".jpg");
+        /*absoluteImagePath = picturePath + editName.getText().toString()+ ".jpg";
+        Log.d("absoluteImagePath", absoluteImagePath);*/
         FileOutputStream out;
         try {
                 out = new FileOutputStream(file);
@@ -194,6 +194,7 @@ public class AddFoodFragment extends Fragment {
         } catch (IOException e) {
                 e.printStackTrace();
         }
+        return picturePath;
     }
 
     //传参数的构造函数，用来初始化编辑界面
@@ -246,7 +247,7 @@ public class AddFoodFragment extends Fragment {
         if(bitmap != originBitmap){
             bitmap = originBitmap;
         }
-        savePicture(bitmap);
+        absoluteImagePath = savePicture(bitmap, editName.getText().toString());
         ContentValues values = new ContentValues();
         values.put("name", editName.getText().toString());
         values.put("price", editPrice.getText().toString());
