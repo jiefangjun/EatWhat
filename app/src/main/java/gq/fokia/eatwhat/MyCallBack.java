@@ -26,6 +26,8 @@ import static gq.fokia.eatwhat.MainActivity.db;
 public class MyCallBack extends ItemTouchHelper.Callback {
     private int dragFlags;
     private int swipeFlags;
+    public Food current_food;
+    public int current_position;
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
         dragFlags = 0;
@@ -68,7 +70,7 @@ public class MyCallBack extends ItemTouchHelper.Callback {
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
         final int position = viewHolder.getAdapterPosition();
         recyclerView.getAdapter().notifyItemRemoved(position);
-        final Food food = foodList.get(position);
+        Food food = foodList.get(position);
         Log.d("position food name", food.getName());
         db.delete("food", "name=?", new String[]{food.getName()});
         foodList.remove(position);
@@ -83,23 +85,25 @@ public class MyCallBack extends ItemTouchHelper.Callback {
         showSnackBar(viewHolder, "已删除", food, position);
     }
 
-    public void showSnackBar(final RecyclerView.ViewHolder view, String sentence, final Food food, final int position){
+    public void showSnackBar(final RecyclerView.ViewHolder view, String sentence, Food food, int position){
+        current_food = food;
+        current_position = position;
         Snackbar snackbar = Snackbar.make(view.itemView, sentence, Snackbar.LENGTH_SHORT);
         snackbar.setAction("撤销", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                foodList.add(position, food);
+                foodList.add(current_position, current_food);
                 ContentValues values = new ContentValues();
                 String path = Environment.getExternalStorageDirectory().toString() + "/EatWhat/" +
-                        food.getName() + ".jpg";
+                        current_food.getName() + ".jpg";
                 Log.d("callBack_path",path);
-                values.put("name", food.getName());
-                values.put("price", food.getPrice());
-                values.put("introduce",food.getIntroduce());
+                values.put("name", current_food.getName());
+                values.put("price", current_food.getPrice());
+                values.put("introduce",current_food.getIntroduce());
                 values.put("image", path);
                 //TODO savepicture
-                AddFoodFragment.savePicture(food.getBitmap(), food.getName());
-                values.put("like", food.getIsLike());
+                AddFoodFragment.savePicture(current_food.getBitmap(), current_food.getName());
+                values.put("like", current_food.getIsLike());
                 db.insert("food", null, values);
                 recyclerView.getAdapter().notifyDataSetChanged();
             }

@@ -245,10 +245,10 @@ public class AddFoodFragment extends Fragment {
         if(bitmap != originBitmap){
             bitmap = originBitmap;
         }
-        absoluteImagePath = savePicture(bitmap, editName.getText().toString());
-        //TODO 改变图片存储逻辑，避免图片重复压缩
         File file = new File(Environment.getExternalStorageDirectory().toString() + "/EatWhat/" + name + ".jpg");
         file.delete();
+        absoluteImagePath = savePicture(bitmap, editName.getText().toString());
+        //TODO 改变图片存储逻辑，避免图片重复压缩
         ContentValues values = new ContentValues();
         values.put("name", editName.getText().toString());
         values.put("price", editPrice.getText().toString());
