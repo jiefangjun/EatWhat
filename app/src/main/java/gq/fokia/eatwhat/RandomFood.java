@@ -138,6 +138,7 @@ public class RandomFood extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         Log.d("RandomFood","onDestroy");
+        if(bitmap != null)
         bitmap.recycle();
     }
 }

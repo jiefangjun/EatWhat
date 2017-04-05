@@ -98,6 +98,7 @@ public class MyCallBack extends ItemTouchHelper.Callback {
                 values.put("introduce",food.getIntroduce());
                 values.put("image", path);
                 //TODO savepicture
+                AddFoodFragment.savePicture(food.getBitmap(), food.getName());
                 values.put("like", food.getIsLike());
                 db.insert("food", null, values);
                 recyclerView.getAdapter().notifyDataSetChanged();

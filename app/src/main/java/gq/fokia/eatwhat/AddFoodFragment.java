@@ -181,8 +181,6 @@ public class AddFoodFragment extends Fragment {
             dir.mkdirs();
         }
         File file = new File(Environment.getExternalStorageDirectory().toString() + "/EatWhat/", edit_name + ".jpg");
-        /*absoluteImagePath = picturePath + editName.getText().toString()+ ".jpg";
-        Log.d("absoluteImagePath", absoluteImagePath);*/
         FileOutputStream out;
         try {
                 out = new FileOutputStream(file);
@@ -248,6 +246,7 @@ public class AddFoodFragment extends Fragment {
             bitmap = originBitmap;
         }
         absoluteImagePath = savePicture(bitmap, editName.getText().toString());
+        //TODO 改变图片存储逻辑，避免图片重复压缩
         File file = new File(Environment.getExternalStorageDirectory().toString() + "/EatWhat/" + name + ".jpg");
         file.delete();
         ContentValues values = new ContentValues();
