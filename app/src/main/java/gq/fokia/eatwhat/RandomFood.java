@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Random;
 
@@ -35,6 +37,7 @@ public class RandomFood extends Fragment {
     private Cursor cursor;
     private Bitmap bitmap;
     private Food food;
+    private static int click;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -88,41 +91,37 @@ public class RandomFood extends Fragment {
 
     private void getRandom(){
         int length, position;
-        Random random = new Random();
         cursor.moveToFirst();
         int first = cursor.getInt(0);
         cursor.moveToLast();
         int last = cursor.getInt(0);
         if(last == first){
-            length = 1;
+            cursor.moveToFirst();
+            Toast.makeText(getActivity(), "就这一个哦", Toast.LENGTH_SHORT).show();
+            return;
         }else{
             length = last - first;
         }
-        position = random.nextInt(length);
-        if(position != lastposition){
-            if(cursor.moveToPosition(position))
+        if(length == 1){
+            if(click % 2 == 0){
+                cursor.moveToLast();
+            }else{
+                cursor.moveToFirst();
+            }
+            click++;
+            return;
+        }
+        do {
+            Random random = new Random();
+            position = random.nextInt(length);
+            if(position == lastposition)
+                continue;
+            if(cursor.moveToPosition(position)){
                 cursor.moveToPosition(position);
                 lastposition = position;
-        }else {
-            while (position == lastposition){
-                if(position == 0){
-                    position = length - position;
-                    if(cursor.moveToPosition(position)){
-                        cursor.moveToPosition(position);
-                        lastposition = position;
-                        break;
-                    }
-                }else
-                position = random.nextInt(length) / 2;
-                if(position != lastposition){
-                    if(cursor.moveToPosition(position)){
-                        cursor.moveToPosition(position);
-                        lastposition = position;
-                        break;
-                    }
-                }
+                break;
             }
-        }
+        }while (position == lastposition);
     }
 
     @Override
