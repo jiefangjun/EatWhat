@@ -236,6 +236,7 @@ public class AddFoodFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 takePhoto();
+                //TODO nothing todo 都是傻逼
             }
         });
 
