@@ -174,6 +174,9 @@ public class AddFoodFragment extends Fragment {
 
 
     public static String savePicture(Bitmap bitmap, String edit_name) {
+        /*if(bitmap != originBitmap){
+            bitmap = originBitmap;
+        }*/
         String picturePath = Environment.getExternalStorageDirectory().toString() + "/EatWhat/"
                  + edit_name + ".jpg";
         File dir = new File(Environment.getExternalStorageDirectory().toString() + "/EatWhat/");
@@ -243,13 +246,14 @@ public class AddFoodFragment extends Fragment {
     }
 
     private void updateData(String name){
-        if(bitmap != originBitmap){
+        /*if(bitmap != originBitmap){
             bitmap = originBitmap;
-        }
+        }*/
         File file = new File(Environment.getExternalStorageDirectory().toString() + "/EatWhat/" + name + ".jpg");
         file.delete();
         absoluteImagePath = savePicture(bitmap, editName.getText().toString());
         //TODO 改变图片存储逻辑，避免图片重复压缩
+        //TODO 日尼玛，用来写日记吧，哈哈哈 太极拳比赛
         ContentValues values = new ContentValues();
         values.put("name", editName.getText().toString());
         values.put("price", editPrice.getText().toString());
