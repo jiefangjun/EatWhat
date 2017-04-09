@@ -47,7 +47,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> im
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.cardview_item ,parent, false);
-        final ViewHolder holder = new ViewHolder(view);
+        ViewHolder holder = new ViewHolder(view);
         holder.itemView.setOnClickListener(this);
         return holder;
     }

@@ -42,6 +42,7 @@ public class AllFoodFragment extends Fragment {
     public static Food foodZero;//栈顶food对象
     private MainActivity mactivity;
     public static ItemTouchHelper helper;
+    private Boolean doneRefresh = false;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         view = inflater.inflate(R.layout.allfood_fragment, container, false);
@@ -55,6 +56,7 @@ public class AllFoodFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                doneRefresh = false;
                 refreshFragment();
             }
         });
@@ -128,13 +130,13 @@ public class AllFoodFragment extends Fragment {
                 if (mactivity == null){
                     mactivity = (MainActivity) getActivity();
                 }
-                if(data != null){
+                if(data != null && doneRefresh == true){
                     mactivity.replaceFragment(new AddFoodFragment(data.getName(), data.getPrice(),
                             data.getIntroduce(), data.getBitmap(), data.getIsLike()));
+                    doneRefresh = false;
                 }
             }
         });
-        //TODO 修复fragment重复
     }
 
     @Override
@@ -162,6 +164,7 @@ public class AllFoodFragment extends Fragment {
                     Log.d("db.size",cursor.getCount()+"");
                     if(cursor.getCount() <= 5 || cursor.getPosition() == cursor.getCount()){
                         swipeRefreshLayout.setRefreshing(false);
+                        doneRefresh = true;
                         return;
                     }
                     cursor.moveToPosition(foodList.size());
@@ -173,8 +176,10 @@ public class AllFoodFragment extends Fragment {
                     swipeRefreshLayout.setRefreshing(false);
                 }
                 foodZero = foodList.get(0);
+                doneRefresh = true;
                 Log.d("foodZero", foodZero.toString());
         }}, 1200);
+
     }
 
 
