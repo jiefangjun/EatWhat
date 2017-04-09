@@ -25,6 +25,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import static gq.fokia.eatwhat.AllFoodFragment.doneRefresh;
+
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     private DrawerLayout mDrawerLayout;
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private LoveFoodFragment loveFoodFragment;
     private long currentTime;
     private long lastTime;
+    private Boolean isFirst = true;//是否第一次打开
 
     public static FoodDBOpenHelper foodDBOpenHelper;
     public static SQLiteDatabase db;
@@ -68,7 +71,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                replaceFragment(new RandomFood());
+                if(doneRefresh == true || isFirst == true)
+                {
+                    replaceFragment(new RandomFood());
+                }
             }
         });
     }
@@ -132,6 +138,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
         }
         mDrawerLayout.closeDrawers();
+        isFirst = false;
         return false;
     }
 

@@ -42,7 +42,7 @@ public class AllFoodFragment extends Fragment {
     public static Food foodZero;//栈顶food对象
     private MainActivity mactivity;
     public static ItemTouchHelper helper;
-    private Boolean doneRefresh = false;
+    public static Boolean doneRefresh = false;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         view = inflater.inflate(R.layout.allfood_fragment, container, false);
@@ -142,6 +142,7 @@ public class AllFoodFragment extends Fragment {
     @Override
     public void onStart(){
         super.onStart();
+        doneRefresh = false;
         cursor = db.query("food", null, null, null, null, null, "id DESC", null);
         helper = new ItemTouchHelper(new MyCallBack());
         helper.attachToRecyclerView(recyclerView);
