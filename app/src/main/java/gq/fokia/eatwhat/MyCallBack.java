@@ -101,7 +101,6 @@ public class MyCallBack extends ItemTouchHelper.Callback {
                 values.put("price", current_food.getPrice());
                 values.put("introduce",current_food.getIntroduce());
                 values.put("image", path);
-                //TODO savepicture
                 AddFoodFragment.savePicture(current_food.getBitmap(), current_food.getName());
                 values.put("like", current_food.getIsLike());
                 db.insert("food", null, values);

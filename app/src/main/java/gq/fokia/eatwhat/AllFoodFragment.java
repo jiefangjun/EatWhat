@@ -175,7 +175,6 @@ public class AllFoodFragment extends Fragment {
                 foodZero = foodList.get(0);
                 Log.d("foodZero", foodZero.toString());
         }}, 1200);
-        //TODO 修复数据更新
     }
 
 
