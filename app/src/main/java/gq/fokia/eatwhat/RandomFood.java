@@ -113,7 +113,7 @@ public class RandomFood extends Fragment {
         }
         do {
             Random random = new Random();
-            position = random.nextInt(length);
+            position = random.nextInt(length + 1);
             if(position == lastposition)
                 continue;
             if(cursor.moveToPosition(position)){
