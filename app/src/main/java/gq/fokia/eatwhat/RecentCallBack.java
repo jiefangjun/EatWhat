@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import java.util.Collections;
+
 import static gq.fokia.eatwhat.AllFoodFragment.foodList;
 import static gq.fokia.eatwhat.AllFoodFragment.recyclerView;
 import static gq.fokia.eatwhat.MainActivity.db;
@@ -29,7 +31,11 @@ public class RecentCallBack extends MyCallBack {
         recyclerView.getAdapter().notifyItemRemoved(position);
         showSnackBar(viewHolder, "已从最近列表移除", food, position);
     }
-    //TODO 交换顺序
+
+    @Override
+    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+        return false;
+    }
 
     @Override
     public void showSnackBar(RecyclerView.ViewHolder view, String sentence, Food food, int position) {
