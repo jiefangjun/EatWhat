@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         transparentState();
         initToolbar();
-        //TODO 侧滑逻辑判断
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, mDrawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mDrawerLayout.addDrawerListener(toggle);
@@ -109,34 +108,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.nav_all:
-                if(allFoodFragment == null){
-                    allFoodFragment = new AllFoodFragment();
-                }
-                replaceFragment(allFoodFragment);
-                navigationView.setCheckedItem(R.id.nav_all);
-                break;
-            case R.id.nav_add:
-                replaceFragment(new AddFoodFragment());
-                navigationView.setCheckedItem(R.id.nav_add);
-                break;
-            case R.id.nav_like:
-                if(loveFoodFragment == null){
-                    loveFoodFragment = new LoveFoodFragment();
-                }
-                replaceFragment(loveFoodFragment);
-                navigationView.setCheckedItem(R.id.nav_like);
-                break;
-            case R.id.nav_recent:
-                if (recentFood == null){
-                    recentFood = new RecentFood();
-                }
-                replaceFragment(recentFood);
-                navigationView.setCheckedItem(R.id.nav_recent);
-                break;
-            default:
-                break;
+        if(doneRefresh == true || isFirst == true) {
+            switch (item.getItemId()) {
+                case R.id.nav_all:
+                    if (allFoodFragment == null) {
+                        allFoodFragment = new AllFoodFragment();
+                    }
+                    replaceFragment(allFoodFragment);
+                    navigationView.setCheckedItem(R.id.nav_all);
+                    break;
+                case R.id.nav_add:
+                    replaceFragment(new AddFoodFragment());
+                    navigationView.setCheckedItem(R.id.nav_add);
+                    break;
+                case R.id.nav_like:
+                    if (loveFoodFragment == null) {
+                        loveFoodFragment = new LoveFoodFragment();
+                    }
+                    replaceFragment(loveFoodFragment);
+                    navigationView.setCheckedItem(R.id.nav_like);
+                    break;
+                case R.id.nav_recent:
+                    if (recentFood == null) {
+                        recentFood = new RecentFood();
+                    }
+                    replaceFragment(recentFood);
+                    navigationView.setCheckedItem(R.id.nav_recent);
+                    break;
+                default:
+                    break;
+            }
         }
         mDrawerLayout.closeDrawers();
         isFirst = false;
