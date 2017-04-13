@@ -1,7 +1,11 @@
 package gq.fokia.eatwhat;
 
 import android.Manifest;
+import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -18,6 +22,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -41,6 +46,7 @@ import java.io.IOException;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
+import static gq.fokia.eatwhat.AllFoodFragment.doneRefresh;
 import static gq.fokia.eatwhat.AllFoodFragment.foodList;
 import static gq.fokia.eatwhat.MainActivity.db;
 
@@ -66,9 +72,9 @@ public class AddFoodFragment extends Fragment {
     private int like;//传递过来的checkbox的值
     private Bitmap originBitmap;//修改数据时已经存在的bitmap
 
-
-    public static final int TAKE_PHOTO = 1;
-    public static final int TAKE_CUT = 2;
+    public final int CHOOSE_PHOTO = 0;
+    public final int TAKE_PHOTO = 1;
+    public final int TAKE_CUT = 2;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -166,17 +172,59 @@ public class AddFoodFragment extends Fragment {
                     getBitmap();
                 }
                 break;
+            case CHOOSE_PHOTO:
+                if (resultCode == RESULT_OK)
+                    handleImage(data);
+                break;
             default:
                 break;
         }
     }
 
+    @TargetApi(19)
+    private void handleImage(Intent data){
+        String imagePath = null;
+        Uri uri = data.getData();
+        if (DocumentsContract.isDocumentUri(getActivity(), uri)) {
+            //如果是document类型的Uri，则通过document id处理
+            String docId = DocumentsContract.getDocumentId(uri);
+            if("com.android.providers.media.document".equals(uri.getAuthority())){
+                String id = docId.split(":")[1];
+                String selection = MediaStore.Images.Media._ID + "=" + id;
+                imagePath = getImagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, selection);
+            }else if("com.android.providers.downloads.documents".equals(uri.getAuthority())){
+                Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(docId));
+                imagePath = getImagePath(contentUri, null);
+            }else if ("content".equalsIgnoreCase(uri.getScheme())){
+                //content类型Uri，普通方式处理
+                imagePath = getImagePath(uri, null);
+            }else if("file".equalsIgnoreCase(uri.getScheme())) {
+                imagePath = uri.getPath();
+            }
+            if(imagePath != null){
+                bitmap = BitmapFactory.decodeFile(imagePath);
+                Log.d("handleImage", "bitmap已更新");
+            }
+        }
+    }
+
+    private String getImagePath(Uri uri, String selection){
+        String path = null;
+        Cursor cursor = getActivity().getContentResolver().query(uri, null, selection, null, null);
+        if (cursor != null){
+            if(cursor.moveToFirst()){
+                Log.d("DATA",MediaStore.Images.Media.DATA);
+                path = cursor.getString(cursor.getColumnIndex(MediaStore.
+                        Images.Media.DATA));
+            }
+            cursor.close();
+        }
+        return path;
+    }
+
 
 
     public static String savePicture(Bitmap bitmap, String edit_name) {
-        /*if(bitmap != originBitmap){
-            bitmap = originBitmap;
-        }*/
         String picturePath = Environment.getExternalStorageDirectory().toString() + "/EatWhat/"
                  + edit_name + ".jpg";
         File dir = new File(Environment.getExternalStorageDirectory().toString() + "/EatWhat/");
@@ -215,6 +263,7 @@ public class AddFoodFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        doneRefresh = true;
         if(name != null && price != null && bitmap != null){
             editName.setText(name);
             editPrice.setText(price+"");
@@ -239,8 +288,22 @@ public class AddFoodFragment extends Fragment {
         editImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                takePhoto();
                 //TODO nothing todo 都是傻逼
+                AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+                        dialog.setItems(new String[]{"拍照", "从相册选择"}, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which){
+                                case 0:
+                                    takePhoto();
+                                    break;
+                                case 1:
+                                    openAlbum();
+                                    break;
+                            }
+                        }
+                    });
+                        dialog.show();
             }
         });
 
@@ -298,6 +361,12 @@ public class AddFoodFragment extends Fragment {
             return 1;
         else
             return 0;
+    }
+
+    private void openAlbum(){
+        Intent intent = new Intent("android.intent.action.GET_CONTENT");
+        intent.setType("image/*");
+        startActivityForResult(intent, CHOOSE_PHOTO);
     }
 
     @Override

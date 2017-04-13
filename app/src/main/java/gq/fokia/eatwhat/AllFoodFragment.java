@@ -69,6 +69,7 @@ public class AllFoodFragment extends Fragment {
         int dbSize,i = 0, length;
         dbSize = cursor.getCount();
         if(dbSize == 0){
+            doneRefresh = true;
             Toast.makeText(getContext(),"什么也没有哦，请添加数据",Toast.LENGTH_SHORT).show();
             return;
         }else if(dbSize > 5){
