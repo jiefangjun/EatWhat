@@ -173,39 +173,40 @@ public class AddFoodFragment extends Fragment {
                 }
                 break;
             case CHOOSE_PHOTO:
-                if (resultCode == RESULT_OK)
-                    handleImage(data);
+                if (resultCode == RESULT_OK){
+                    handleImageOnKitKat(data);
+                }
                 break;
             default:
                 break;
         }
     }
 
+
     @TargetApi(19)
-    private void handleImage(Intent data){
+    private void handleImageOnKitKat(Intent data) {
         String imagePath = null;
         Uri uri = data.getData();
+        Log.d("TAG", "handleImageOnKitKat: uri is " + uri);
         if (DocumentsContract.isDocumentUri(getActivity(), uri)) {
-            //如果是document类型的Uri，则通过document id处理
+            // 如果是document类型的Uri，则通过document id处理
             String docId = DocumentsContract.getDocumentId(uri);
-            if("com.android.providers.media.document".equals(uri.getAuthority())){
-                String id = docId.split(":")[1];
+            if("com.android.providers.media.documents".equals(uri.getAuthority())) {
+                String id = docId.split(":")[1]; // 解析出数字格式的id
                 String selection = MediaStore.Images.Media._ID + "=" + id;
                 imagePath = getImagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, selection);
-            }else if("com.android.providers.downloads.documents".equals(uri.getAuthority())){
+            } else if ("com.android.providers.downloads.documents".equals(uri.getAuthority())) {
                 Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(docId));
                 imagePath = getImagePath(contentUri, null);
-            }else if ("content".equalsIgnoreCase(uri.getScheme())){
-                //content类型Uri，普通方式处理
-                imagePath = getImagePath(uri, null);
-            }else if("file".equalsIgnoreCase(uri.getScheme())) {
-                imagePath = uri.getPath();
             }
-            if(imagePath != null){
-                bitmap = BitmapFactory.decodeFile(imagePath);
-                Log.d("handleImage", "bitmap已更新");
-            }
+        } else if ("content".equalsIgnoreCase(uri.getScheme())) {
+            // 如果是content类型的Uri，则使用普通方式处理
+            imagePath = getImagePath(uri, null);
+        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            // 如果是file类型的Uri，直接获取图片路径即可
+            imagePath = uri.getPath();
         }
+        bitmap = BitmapFactory.decodeFile(imagePath);
     }
 
     private String getImagePath(Uri uri, String selection){
@@ -213,9 +214,7 @@ public class AddFoodFragment extends Fragment {
         Cursor cursor = getActivity().getContentResolver().query(uri, null, selection, null, null);
         if (cursor != null){
             if(cursor.moveToFirst()){
-                Log.d("DATA",MediaStore.Images.Media.DATA);
-                path = cursor.getString(cursor.getColumnIndex(MediaStore.
-                        Images.Media.DATA));
+                path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
             }
             cursor.close();
         }
@@ -365,6 +364,7 @@ public class AddFoodFragment extends Fragment {
 
     private void openAlbum(){
         Intent intent = new Intent("android.intent.action.GET_CONTENT");
+        //Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.setType("image/*");
         startActivityForResult(intent, CHOOSE_PHOTO);
     }
