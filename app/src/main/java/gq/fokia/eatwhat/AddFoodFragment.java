@@ -287,7 +287,6 @@ public class AddFoodFragment extends Fragment {
         editImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO nothing todo 都是傻逼
                 AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
                         dialog.setItems(new String[]{"拍照", "从相册选择"}, new DialogInterface.OnClickListener() {
                         @Override
