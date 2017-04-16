@@ -207,6 +207,7 @@ public class AddFoodFragment extends Fragment {
             imagePath = uri.getPath();
         }
         bitmap = BitmapFactory.decodeFile(imagePath);
+        //茕茕白兔，东走西顾，衣不如新，人不如故
     }
 
     private String getImagePath(Uri uri, String selection){
@@ -363,7 +364,6 @@ public class AddFoodFragment extends Fragment {
 
     private void openAlbum(){
         Intent intent = new Intent("android.intent.action.GET_CONTENT");
-        //Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.setType("image/*");
         startActivityForResult(intent, CHOOSE_PHOTO);
     }
@@ -381,5 +381,4 @@ public class AddFoodFragment extends Fragment {
             default:
         }
     }
-    //TODO 今天吹牛逼，好开心呢
 }
