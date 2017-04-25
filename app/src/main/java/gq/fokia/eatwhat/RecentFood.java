@@ -32,5 +32,6 @@ public class RecentFood extends AllFoodFragment {
     public void onDestroy() {
         super.onDestroy();
         copyList(recentFoods, foodList);
+        cursor.close();
     }
 }

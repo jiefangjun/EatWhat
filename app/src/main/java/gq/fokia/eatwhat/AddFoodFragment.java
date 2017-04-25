@@ -305,6 +305,7 @@ public class AddFoodFragment extends Fragment {
                         dialog.show();
             }
         });
+        //TODO 压缩从相册选择的图片
 
     }
 
@@ -333,6 +334,8 @@ public class AddFoodFragment extends Fragment {
         db.update("food", values, "name=?" , args);
         foodList.clear();
         Toast.makeText(getContext(),"数据更新成功",Toast.LENGTH_SHORT).show();
+        //TODO 存储更新图片
+
     }
 
     private void cutPhoto(int aspectX,int aspectY,int outputX,int outputY,Uri uri,int requestCode) {
