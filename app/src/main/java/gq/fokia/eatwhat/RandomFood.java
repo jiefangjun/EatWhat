@@ -92,9 +92,9 @@ public class RandomFood extends Fragment {
     private void getRandom(){
         int length, position;
         cursor.moveToFirst();
-        int first = cursor.getInt(0);
+        int first = cursor.getPosition();
         cursor.moveToLast();
-        int last = cursor.getInt(0);
+        int last = cursor.getPosition();
         if(last == first){
             cursor.moveToFirst();
             Toast.makeText(getActivity(), "就这一个哦", Toast.LENGTH_SHORT).show();
@@ -136,7 +136,6 @@ public class RandomFood extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d("RandomFood","onDestroy");
         if(bitmap != null)
         bitmap.recycle();
     }
