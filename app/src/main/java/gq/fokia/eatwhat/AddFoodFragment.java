@@ -187,7 +187,6 @@ public class AddFoodFragment extends Fragment {
     private void handleImageOnKitKat(Intent data) {
         String imagePath = null;
         Uri uri = data.getData();
-        Log.d("TAG", "handleImageOnKitKat: uri is " + uri);
         if (DocumentsContract.isDocumentUri(getActivity(), uri)) {
             // 如果是document类型的Uri，则通过document id处理
             String docId = DocumentsContract.getDocumentId(uri);
@@ -206,7 +205,12 @@ public class AddFoodFragment extends Fragment {
             // 如果是file类型的Uri，直接获取图片路径即可
             imagePath = uri.getPath();
         }
-        bitmap = BitmapFactory.decodeFile(imagePath);
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 4;
+        bitmap = BitmapFactory.decodeFile(imagePath, options);
+        bitmap = bitmap.createScaledBitmap(bitmap, 600, 500, true);
+        Log.i("inSampleSize", "压缩后图片的大小" + (bitmap.getByteCount() / 1024 / 1024)
+                + "M宽度为" + bitmap.getWidth() + "高度为" + bitmap.getHeight());
         //茕茕白兔，东走西顾，衣不如新，人不如故
     }
 
@@ -305,8 +309,6 @@ public class AddFoodFragment extends Fragment {
                         dialog.show();
             }
         });
-        //TODO 压缩从相册选择的图片
-
     }
 
     private void updateData(String name){
@@ -334,8 +336,7 @@ public class AddFoodFragment extends Fragment {
         db.update("food", values, "name=?" , args);
         foodList.clear();
         Toast.makeText(getContext(),"数据更新成功",Toast.LENGTH_SHORT).show();
-        //TODO 存储更新图片
-
+        savePicture(bitmap, editName.getText().toString());
     }
 
     private void cutPhoto(int aspectX,int aspectY,int outputX,int outputY,Uri uri,int requestCode) {
