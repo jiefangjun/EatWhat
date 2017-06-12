@@ -208,7 +208,6 @@ public class AddFoodFragment extends Fragment {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 4;
         bitmap = BitmapFactory.decodeFile(imagePath, options);
-        bitmap = bitmap.createScaledBitmap(bitmap, 600, 500, true);
         Log.i("inSampleSize", "压缩后图片的大小" + (bitmap.getByteCount() / 1024 / 1024)
                 + "M宽度为" + bitmap.getWidth() + "高度为" + bitmap.getHeight());
         //茕茕白兔，东走西顾，衣不如新，人不如故
